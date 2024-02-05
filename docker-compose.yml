@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  app:
+    restart: always
+    build:
+      context: .
+      dockerfile: ./app/Dockerfile
+      args:
+        - NODE_ENV=production
+        - DATABASE_URL=postgres://postgres:example@db:54321/postgres
+    ports:
+      - "3000:3000"
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+    ports:
+      - "54321:54321"
