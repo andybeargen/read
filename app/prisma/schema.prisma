@@ -100,4 +100,5 @@ model Users {
   // the profile picture is an id of a companion archetype
   profilePicture             Int                 @default(1)
   readingCompanionArchetypes Int
+  dateCreated                DateTime            @default(now())
 }

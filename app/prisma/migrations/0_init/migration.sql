@@ -90,7 +90,8 @@ CREATE TABLE "Users" (
     "coins" INTEGER NOT NULL DEFAULT 0,
     "DateTimeOfBirth" DATETIME NOT NULL,
     "profilePicture" INTEGER NOT NULL DEFAULT 1,
-    "readingCompanionArchetypes" INTEGER NOT NULL
+    "readingCompanionArchetypes" INTEGER NOT NULL,
+    "dateCreated" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- CreateIndex
