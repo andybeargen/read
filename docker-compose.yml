@@ -8,9 +8,9 @@ services:
       dockerfile: ./app/Dockerfile
       args:
         - NODE_ENV=production
-        - DATABASE_URL=postgres://postgres:example@db:54321/postgres
+        - DATABASE_URL=postgres://postgres:example@db:5432/postgres
     ports:
-      - "3000:3000"
+      - "3000:80"
 
   db:
     image: postgres
@@ -20,4 +20,4 @@ services:
     volumes:
       - ./db_data:/var/lib/postgresql/data
     ports:
-      - "54321:54321"
+      - "5432:5432"
