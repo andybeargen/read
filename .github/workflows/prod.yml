@@ -5,7 +5,7 @@ on:
       workflow_dispatch:
 jobs:
     deploy:
-        runs-on: amd2
+        runs-on: self-hosted
         steps:
              - uses: actions/checkout@v2
 
