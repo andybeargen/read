@@ -81,15 +81,6 @@ export async function action({request,}: ActionFunctionArgs) {
 export default function Login() {
     const { error } = useLoaderData<typeof loader>();
 
-        // return (
-        //   <Form action="/events" method="post">
-        //     <input name="title" type="text" />
-        //     <input name="description" type="text" />
-        //   </Form>
-        // );
-        //  <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}> this is for later
-
-
     return (
         <Container component="main" maxWidth="xs">
         <Box
