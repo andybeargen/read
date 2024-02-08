@@ -5,6 +5,18 @@ import { Form, useLoaderData } from "@remix-run/react";
 import { getSession, commitSession } from "../sessions";
 import { loginUser } from "~/models/user.server";
 
+import {
+    Button,
+    TextField,
+    FormControlLabel,
+    Checkbox,
+    Link,
+    Grid,
+    Box,
+    Typography,
+    Container
+} from '@mui/material'
+
 export async function loader({request,}: LoaderFunctionArgs) {
     const session = await getSession(
         request.headers.get("Cookie")
@@ -69,22 +81,82 @@ export async function action({request,}: ActionFunctionArgs) {
 export default function Login() {
     const { error } = useLoaderData<typeof loader>();
 
+        // return (
+        //   <Form action="/events" method="post">
+        //     <input name="title" type="text" />
+        //     <input name="description" type="text" />
+        //   </Form>
+        // );
+        //  <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}> this is for later
+
+
     return (
-        <div>
-        {error ? <div className="error">{error}</div> : null}
-        <Form method="post" action="/login">
-            <div>
-            <p>Please sign in</p>
-            </div>
-            <label>
-            Email: <input type="email" name="email" />
-            </label>
-            <label>
-            Password:{" "}
-            <input type="password" name="password" />
-            </label>
-            <button type="submit">Login</button>
-        </Form>
-        </div>
+        <Container component="main" maxWidth="xs">
+        <Box
+          sx={{  
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography component="h1" variant="h3" style={{ textAlign: 'center' }}>
+            Welcome to Pokémon Read
+          </Typography>
+          <Typography component="h1" variant="h5" style={{ textAlign: 'center' }}>
+            Please enter your email and password in to continue.
+          </Typography>
+
+          <Form action="/login" method="post">
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="#" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
+          
+          
+          
+          </Form>
+        </Box>
+      </Container>
     );
 }
