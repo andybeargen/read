@@ -9,3 +9,96 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model ReadingCompanionArchetypes {
+  companionNumber Int    @id @unique @default(autoincrement())
+  name            String
+  maxHP           Int
+  evolvesFrom     Int    @default(-1)
+  evolvesTo       Int    @default(-1)
+  type            String
+  description     String
+  image           String
+}
+
+model ReadingCompanions {
+  id              String   @unique @default(dbgenerated("gen_random_uuid()")) @map("_id")
+  companionNumber Int      @unique
+  love            Int
+  hunger          Int
+  hp              Int
+  customName      String
+  lastReadWith    DateTime
+  Users           Users?   @relation(fields: [usersId], references: [id])
+  usersId         String?
+}
+
+model Books {
+  id          String         @unique @default(dbgenerated("gen_random_uuid()")) @map("_id")
+  title       String
+  author      String
+  genre       String
+  description String
+  image       String
+  sections    BookSections[]
+  Users       Users?         @relation(fields: [usersId], references: [id])
+  usersId     String?
+}
+
+model BookSections {
+  id      String  @unique @default(dbgenerated("gen_random_uuid()")) @map("_id")
+  bookId  String  @map("_bookId")
+  title   String
+  content String
+  quiz    String  @map("_quizId")
+  Books   Books?  @relation(fields: [booksId], references: [id])
+  booksId String?
+}
+
+model BookProgresions {
+  id             String   @unique @default(dbgenerated("gen_random_uuid()")) @map("_id")
+  bookId         String   @map("_bookId")
+  userId         String   @map("_userId")
+  currentSection String   @map("_currentSection")
+  lastRead       DateTime
+  completed      Boolean  @default(false)
+  Users          Users?   @relation(fields: [usersId], references: [id])
+  usersId        String?
+}
+
+model Quizzes {
+  id        String          @unique @default(dbgenerated("gen_random_uuid()")) @map("_id")
+  questions QuizQuestions[]
+  bookId    String          @map("_bookId")
+}
+
+model QuizQuestions {
+  id        String   @unique @default(dbgenerated("gen_random_uuid()")) @map("_id")
+  question  String
+  answer    String
+  Quizzes   Quizzes? @relation(fields: [quizzesId], references: [id])
+  quizzesId String?
+}
+
+model QuizScores {
+  id     String @unique @default(dbgenerated("gen_random_uuid()")) @map("_id")
+  userId String @map("_userId")
+  quizId String @map("_quizId")
+  score  Int
+}
+
+model Users {
+  id                         String              @unique @default(dbgenerated("gen_random_uuid()")) @map("_id")
+  username                   String
+  password                   String // salted with id and hashed
+  email                      String
+  coins                      Int                 @default(0)
+  DateTimeOfBirth            DateTime
+  books                      Books[]
+  bookProgressions           BookProgresions[]
+  companions                 ReadingCompanions[]
+  // the profile picture is an id of a companion archetype
+  profilePicture             Int                 @default(1)
+  readingCompanionArchetypes Int
+  dateCreated                DateTime            @default(now())
+}

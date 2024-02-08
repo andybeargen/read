@@ -8,9 +8,11 @@
     "dev": "remix dev --manual",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/index.js",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "prisma:generate": "prisma generate"
   },
   "dependencies": {
+    "@prisma/client": "^5.9.1",
     "@remix-run/css-bundle": "^2.6.0",
     "@remix-run/node": "^2.6.0",
     "@remix-run/react": "^2.6.0",
