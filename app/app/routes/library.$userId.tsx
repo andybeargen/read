@@ -1,43 +1,20 @@
 import * as React from 'react';
 import { useState } from 'react';
 import {   
-    Link,
-    Meta,
-    Links,
-    useLoaderData, } from '@remix-run/react';
+    Link,} from '@remix-run/react';
 import { Button,
     Typography,
     Box,
-    createTheme,
+    Container,
     InputBase,
     AppBar,
     styled,
-    alpha,
     Grid,
     Paper,
 } from '@mui/material';
 import { 
     Search as SearchIcon,
-    AutoStories,
 } from '@mui/icons-material';
-
-const theme = createTheme({
-    palette: {
-      background: {
-        paper: '#fff',
-      },
-      text: {
-        primary: '#0c174b',
-        secondary: '#fff',
-      },
-      primary: {
-        main: '#de7d37'
-      }
-    },
-    shape: {
-      borderRadius: 50,
-    }
-});
 
 const fakeBooks = [
   {
@@ -51,11 +28,11 @@ const fakeBooks = [
   },
   {
     _id: 2,
-    title: 'Book2',
-    author: "author2",
-    genre: "genre2",
+    title: 'Multivariable Calculus',
+    author: "James Stewart",
+    genre: "Textbook",
     description: "",
-    image: "",
+    image: "https://www.cengage.com/covers/imageServlet?image_type=LRGFC&catalog=cengage&productISBN13=9780357042922",
     usersId: 1,
   },
   {
@@ -130,11 +107,10 @@ const fakeBooks = [
     image: "",
     usersId: 1,
   },
-
 ];
 
 const BookCard = styled(Paper)(({ theme }) => ({
-  backgroundColor: '#d3d3d3',
+  backgroundColor: "#808080",
   padding: theme.spacing(1),
   borderRadius: 15,
   height: 160,
@@ -176,12 +152,13 @@ export default function Library() {
   const [searchItem, setSearchItem] = useState('')
   const [filteredBooks, setFilteredBooks] = useState(fakeBooks)
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: { target: { value: any; }; }) => {
     const searchTerm = e.target.value;
     setSearchItem(searchTerm)
 
     const filteredItems = fakeBooks.filter((book) =>
-    book.title.toLowerCase().includes(searchTerm.toLowerCase())
+    book.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    book.author.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     setFilteredBooks(filteredItems);
@@ -189,10 +166,11 @@ export default function Library() {
 
 
   return (
-    <Box
-          sx={{
-              flexGrow: 1,
-          }}
+  <Container
+      maxWidth = {false}
+      sx={{
+        padding: 0,
+      }}
       >
         <AppBar position="static" elevation={0}>
             <Box sx={{
@@ -276,12 +254,12 @@ export default function Library() {
                         style={{ wordWrap: "break-word" }}
                         component="div"
                         display="block"
-                        color="#000"
+                        color="#0c174b"
                   >{book.title}</Typography>
                   <Typography noWrap={true}
                         component="div"
                         display="block"
-                        color="#000">
+                        color="#0c174b">
                           {book.author}
                   </Typography>
                 </Box>
@@ -290,6 +268,6 @@ export default function Library() {
             </Grid>
           </Grid>
         </Box>
-    </Box>
+    </Container>
   );
 }
