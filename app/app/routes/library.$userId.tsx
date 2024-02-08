@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import {   
     Link,
     Meta,
@@ -41,11 +42,11 @@ const theme = createTheme({
 const fakeBooks = [
   {
     _id: 1,
-    title: 'Book1',
-    author: "author1",
-    genre: "genre1",
+    title: 'Introduction to Algorithms',
+    author: "	Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein",
+    genre: "Textbook",
     description: "",
-    image: "",
+    image: "https://upload.wikimedia.org/wikipedia/en/f/ff/Clrs4.jpeg",
     usersId: 1,
   },
   {
@@ -66,24 +67,84 @@ const fakeBooks = [
     image: "",
     usersId: 1,
   },
+  {
+    _id: 4,
+    title: 'Book4',
+    author: "author4",
+    genre: "genre4",
+    description: "",
+    image: "",
+    usersId: 1,
+  },
+  {
+    _id: 5,
+    title: 'Book5',
+    author: "author5",
+    genre: "genre5",
+    description: "",
+    image: "",
+    usersId: 1,
+  },
+  {
+    _id: 6,
+    title: 'Book6',
+    author: "author6",
+    genre: "genre6",
+    description: "",
+    image: "",
+    usersId: 1,
+  },
+  {
+    _id: 7,
+    title: 'Book7',
+    author: "author7",
+    genre: "genre7",
+    description: "",
+    image: "",
+    usersId: 1,
+  },
+  {
+    _id: 8,
+    title: 'Book8',
+    author: "author8",
+    genre: "genre8",
+    description: "",
+    image: "",
+    usersId: 1,
+  },
+  {
+    _id: 9,
+    title: 'Book9',
+    author: "author9",
+    genre: "genre9",
+    description: "",
+    image: "",
+    usersId: 1,
+  },
+  {
+    _id: 10,
+    title: 'Book10',
+    author: "author10",
+    genre: "genre10",
+    description: "",
+    image: "",
+    usersId: 1,
+  },
+
 ];
 
 const BookCard = styled(Paper)(({ theme }) => ({
   backgroundColor: '#d3d3d3',
   padding: theme.spacing(1),
   borderRadius: 15,
-  height: 140,
-  width: 100,
+  height: 160,
+  width: 110,
 }));
 
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: 100,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
   border: '2px solid #0c174b',
   marginRight: theme.spacing(2),
   marginLeft: 0,
@@ -111,14 +172,29 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function Library() {  
+export default function Library() {
+  const [searchItem, setSearchItem] = useState('')
+  const [filteredBooks, setFilteredBooks] = useState(fakeBooks)
+
+  const handleInputChange = (e) => {
+    const searchTerm = e.target.value;
+    setSearchItem(searchTerm)
+
+    const filteredItems = fakeBooks.filter((book) =>
+    book.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    setFilteredBooks(filteredItems);
+  }
+
+
   return (
     <Box
           sx={{
               flexGrow: 1,
           }}
       >
-        <AppBar position="static">
+        <AppBar position="static" elevation={0}>
             <Box sx={{
                 display: 'flex',
                 flexDirection:'column',
@@ -153,6 +229,8 @@ export default function Library() {
                     <StyledInputBase
                     placeholder="Search"
                     inputProps={{ 'aria-label': 'search' }}
+                    value={searchItem}
+                    onChange={handleInputChange}
                     />
                 </Search>
                 </Box>
@@ -175,19 +253,38 @@ export default function Library() {
 
         <Box sx={{ 
           flexGrow: 1,
-          padding: "10px",
+          padding: "20px",
         }}>
           <Grid container sx={{ flexGrow: 1 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-            <Grid container justifyContent="center" spacing={5}>
-              {[0, 1, 3, 4, 5, 6, 7, 8].map((value) => (
-                <Grid key={value} item>
+            <Grid container justifyContent="center" spacing={4}>
+              {filteredBooks.map((book) => (
+                <Grid key={book._id} item>
                   <BookCard sx={{ 
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center"
+                    justifyContent: "center",
+                    backgroundImage: `url(${book.image})`,
+                    backgroundPosition: "center center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: 155,
                   }}>
-                    <AutoStories fontSize='large'/>
                   </BookCard>
+                <Box sx={{
+                  width: 110,
+                }}>
+                    <Typography fontWeight='bold'
+                        style={{ wordWrap: "break-word" }}
+                        component="div"
+                        display="block"
+                        color="#000"
+                  >{book.title}</Typography>
+                  <Typography noWrap={true}
+                        component="div"
+                        display="block"
+                        color="#000">
+                          {book.author}
+                  </Typography>
+                </Box>
                 </Grid>
               ))}
             </Grid>
