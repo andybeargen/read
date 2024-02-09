@@ -6,9 +6,9 @@ services:
     build:
       context: .
       dockerfile: ./app/Dockerfile
-      args:
-        - NODE_ENV=production
-        - DATABASE_URL=postgres://postgres:example@db:5432/postgres
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgres://postgres:example@db:5432/postgres
     ports:
       - "3000:3000"
 
