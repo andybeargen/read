@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import {
   BottomNavigation,
   Button,
@@ -8,8 +8,39 @@ import {
 } from "@mui/material";
 import BookIcon from "../components/BookIcon";
 
+import { getSession, commitSession } from "../sessions";
+import { LoaderFunctionArgs, json, redirect } from "@remix-run/node";
+
+export async function loader({request,}: LoaderFunctionArgs) {
+    const session = await getSession(
+        request.headers.get("Cookie")
+    );
+
+    let userId;
+
+    if (session.has("userId")) {
+        userId = session.get("userId");
+        let urlUserId = request.url.split('/').pop();
+
+        if (urlUserId != userId) {
+            return redirect("/login");
+        }
+    } else {
+        return redirect("/login");
+    }
+
+    return json({ userId }, {
+        headers: {
+        "Set-Cookie": await commitSession(session),
+        },
+    });
+}
 
 export default function Dashboard() {
+  let { userId } = useLoaderData<typeof loader>();
+
+  userId = userId != undefined ? userId : "";
+
   return (
     <div style={{ height: "100vh" }}>
       <div
@@ -105,7 +136,7 @@ export default function Dashboard() {
           </Typography>
         </Container>
         <Link
-          to={"/library/1"}
+          to={"/library/".concat(userId)}
           style={{
             textDecoration: "none",
             alignItems: "center",
@@ -142,7 +173,7 @@ export default function Dashboard() {
               Home
             </Button>
           </Link>
-          <Link to={"/dashboard"}>
+          <Link to={"/dashboard/".concat(userId)}>
             <Button variant="contained" color="primary">
               Dashboard
             </Button>

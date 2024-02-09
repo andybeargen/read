@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import {   
-    Link,} from '@remix-run/react';
+    Link, useLoaderData,} from '@remix-run/react';
 import { Button,
     Typography,
     Box,
@@ -16,98 +16,38 @@ import {
     Search as SearchIcon,
 } from '@mui/icons-material';
 
-const fakeBooks = [
-  {
-    _id: 1,
-    title: 'Introduction to Algorithms',
-    author: "	Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein",
-    genre: "Textbook",
-    description: "",
-    image: "https://upload.wikimedia.org/wikipedia/en/f/ff/Clrs4.jpeg",
-    usersId: 1,
-  },
-  {
-    _id: 2,
-    title: 'Multivariable Calculus',
-    author: "James Stewart",
-    genre: "Textbook",
-    description: "",
-    image: "https://www.cengage.com/covers/imageServlet?image_type=LRGFC&catalog=cengage&productISBN13=9780357042922",
-    usersId: 1,
-  },
-  {
-    _id: 3,
-    title: 'Book3',
-    author: "author3",
-    genre: "genre3",
-    description: "",
-    image: "",
-    usersId: 1,
-  },
-  {
-    _id: 4,
-    title: 'Book4',
-    author: "author4",
-    genre: "genre4",
-    description: "",
-    image: "",
-    usersId: 1,
-  },
-  {
-    _id: 5,
-    title: 'Book5',
-    author: "author5",
-    genre: "genre5",
-    description: "",
-    image: "",
-    usersId: 1,
-  },
-  {
-    _id: 6,
-    title: 'Book6',
-    author: "author6",
-    genre: "genre6",
-    description: "",
-    image: "",
-    usersId: 1,
-  },
-  {
-    _id: 7,
-    title: 'Book7',
-    author: "author7",
-    genre: "genre7",
-    description: "",
-    image: "",
-    usersId: 1,
-  },
-  {
-    _id: 8,
-    title: 'Book8',
-    author: "author8",
-    genre: "genre8",
-    description: "",
-    image: "",
-    usersId: 1,
-  },
-  {
-    _id: 9,
-    title: 'Book9',
-    author: "author9",
-    genre: "genre9",
-    description: "",
-    image: "",
-    usersId: 1,
-  },
-  {
-    _id: 10,
-    title: 'Book10',
-    author: "author10",
-    genre: "genre10",
-    description: "",
-    image: "",
-    usersId: 1,
-  },
-];
+import { getSession, commitSession } from "../sessions";
+import { LoaderFunctionArgs, json, redirect } from "@remix-run/node";
+import { getUserLibrary } from '~/models/book.server';
+
+export async function loader({request,}: LoaderFunctionArgs) {
+    const session = await getSession(
+        request.headers.get("Cookie")
+    );
+
+    let userId;
+
+    // check if correct user
+    if (session.has("userId")) {
+        userId = session.get("userId");
+        let urlUserId = request.url.split('/').pop();
+
+        if (urlUserId != userId) {
+            return redirect("/login");
+        }
+    } else {
+        return redirect("/login");
+    }
+
+    // get books
+    let books = userId != undefined ? await getUserLibrary(userId) : [];
+
+    return json({ books }, {
+        headers: {
+        "Set-Cookie": await commitSession(session),
+        },
+    });
+}
 
 const BookCard = styled(Paper)(({ theme }) => ({
   backgroundColor: "#808080",
@@ -149,14 +89,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Library() {
+  const { books } = useLoaderData<typeof loader>();
   const [searchItem, setSearchItem] = useState('')
-  const [filteredBooks, setFilteredBooks] = useState(fakeBooks)
+  const [filteredBooks, setFilteredBooks] = useState(books)
 
   const handleInputChange = (e: { target: { value: any; }; }) => {
     const searchTerm = e.target.value;
     setSearchItem(searchTerm)
 
-    const filteredItems = fakeBooks.filter((book) =>
+    const filteredItems = books.filter((book) =>
     book.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
     book.author.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -236,7 +177,7 @@ export default function Library() {
           <Grid container sx={{ flexGrow: 1 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Grid container justifyContent="center" spacing={4}>
               {filteredBooks.map((book) => (
-                <Grid key={book._id} item>
+                <Grid key={book.id} item>
                   <BookCard sx={{ 
                     display: "flex",
                     alignItems: "center",
