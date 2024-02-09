@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import {   
+import {
     Link, useLoaderData,} from '@remix-run/react';
 import { Button,
     Typography,
@@ -12,7 +12,7 @@ import { Button,
     Grid,
     Paper,
 } from '@mui/material';
-import { 
+import {
     Search as SearchIcon,
 } from '@mui/icons-material';
 
@@ -98,7 +98,7 @@ export default function Library() {
     setSearchItem(searchTerm)
 
     const filteredItems = books.filter((book) =>
-    book.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     book.author.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -137,7 +137,7 @@ export default function Library() {
                     Library
                     </Typography>
                 </Box>
-                
+
                 <Box sx={{
                     padding: '15px 30px 15px 30px',
                 }}>
@@ -155,7 +155,7 @@ export default function Library() {
                 </Box>
             </Box>
         </AppBar>
-              
+
         <Box sx={{
           padding: "10px",
           alignItems: "right"
@@ -170,7 +170,7 @@ export default function Library() {
           </Button>
         </Box>
 
-        <Box sx={{ 
+        <Box sx={{
           flexGrow: 1,
           padding: "20px",
         }}>
@@ -178,7 +178,7 @@ export default function Library() {
             <Grid container justifyContent="center" spacing={4}>
               {filteredBooks.map((book) => (
                 <Grid key={book.id} item>
-                  <BookCard sx={{ 
+                  <BookCard sx={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
