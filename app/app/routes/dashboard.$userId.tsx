@@ -6,6 +6,7 @@ import {
   Typography,
   Box,
 } from "@mui/material";
+import { GlobalNav } from "~/components/GlobalNav";
 import BookIcon from "../components/BookIcon";
 import EggIcon from "../components/EggIcon";
 import SettingsIcon from "../components/SettingsIcon";
@@ -97,6 +98,7 @@ export default function Dashboard() {
             Squirtle
           </Typography>
         </Container>
+
         <Link
           to={"/library/1"}
           style={{
@@ -129,33 +131,8 @@ export default function Dashboard() {
           </Box>
         </Link>
       </Container>
-      <BottomNavigation
-        sx={{
-          gap: 2,
-          justifyContent: "center",
-          alignItems: "center",
-          pb: 2,
-          borderTop: "1px solid #E89B60",
-          width: "100%",
-        }}
-      >
-        <Link to={"/collection"}>
-          <Button variant="contained" color="primary" style={{ fontSize: "0.5em" }}>
-            Critter Collection
-          </Button>
-        </Link>
-        <Link to={"/"}>
-          <Button variant="contained" color="primary">
-            Home
-          </Button>
-        </Link>
-        <Link to={"/hatchery"} style={{ textDecoration: "none" }}>
-          {/* <EggIcon style={{ width: "40px" }} /> */}
-          <Button variant="contained" color="primary">
-            Hatchery
-          </Button>
-        </Link>
-      </BottomNavigation>
+
+      <GlobalNav />
     </div>
   );
 }
