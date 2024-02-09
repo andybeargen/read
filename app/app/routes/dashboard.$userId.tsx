@@ -7,10 +7,13 @@ import {
   Box,
 } from "@mui/material";
 import BookIcon from "../components/BookIcon";
+import EggIcon from "../components/EggIcon";
+import SettingsIcon from "../components/SettingsIcon";
+import CoinIcon from "../components/CoinIcon";
 
 export default function Dashboard() {
   return (
-    <div style={{ height: "100vh" }}>
+    <div style={{ height: "100vh", display: "flex", flexDirection: "column", alignItems: "center" }}>
       <div
         style={{
           background: "linear-gradient(to top, #E89B60, #98C9FF)",
@@ -23,36 +26,28 @@ export default function Dashboard() {
           borderRadius: "0 0 50% 50%",
         }}
       ></div>
-      <Container
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          pl: 0,
-          pr: 0,
-          height: "7%",
-        }}
+      <Box
+        display={"flex"}
+        flexDirection={"row"}
+        justifyContent={"space-between"}
+        width={"100%"}
+        pl={0}
+        pr={0}
+        height={"7%"}
+        maxWidth={"1200px"}
       >
-        <Link to={"/settings"}>
-          <img
-            src={
-              "https://static.vecteezy.com/system/resources/previews/009/373/827/original/setting-3d-icon-png.png"
-            }
-            alt="settings"
-            style={{ width: "50px" }}
-          />
+        <Link to={"/settings"} style={{ height: "100%" }}>
+          <SettingsIcon style={{ height: "100%", position: "relative" }} />
         </Link>
         <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 1,
-            backgroundColor: "#0045bd",
-            borderRadius: "30px",
-            px: 1,
-            py: 0.5,
-          }}
+          display={"flex"}
+          flexDirection={"row"}
+          alignItems={"center"}
+          gap={1}
+          bgcolor={"#0045bd"}
+          borderRadius={"30px"}
+          px={1}
+          py={0.5}
         >
           <Typography
             fontFamily={"monospace"}
@@ -62,13 +57,9 @@ export default function Dashboard() {
           >
             100
           </Typography>
-          <img
-            src={"https://cdn-icons-png.flaticon.com/512/7880/7880066.png"}
-            alt="coin"
-            style={{ width: "30px" }}
-          />
+          <CoinIcon style={{ width: "30px" }} />
         </Box>
-      </Container>
+      </Box>
       <Container
         sx={{
           height: "93%",
@@ -98,7 +89,10 @@ export default function Dashboard() {
             variant="h5"
             component="h1"
             fontFamily={"monospace"}
+            fontWeight={"bold"}
             color={"#0045bd"}
+            position={"absolute"}
+            top={"51vh"}
           >
             Squirtle
           </Typography>
@@ -113,7 +107,7 @@ export default function Dashboard() {
           }}
         >
           <Box
-            bgcolor={"#70c6ff"}
+            bgcolor={"#D9F4FF"}
             fontSize={"2em"}
             gap={2}
             alignItems={"center"}
@@ -123,31 +117,45 @@ export default function Dashboard() {
             width={"80%"}
             height={"80px"}
             borderRadius={"50px"}
+            border={"2px solid #E89B60"}
+            color={"#0045bd"}
+            mb={20}
+            sx={{ "&:hover": { backgroundColor: "#001e6b", color: "white" } }}
           >
-            <Typography
-              variant="h4"
-              component="h1"
-              fontFamily={"monospace"}
-              color={"#0045bd"}
-            >
+            <Typography variant="h4" component="h1" fontFamily={"monospace"}>
               READ
             </Typography>
-            <BookIcon style={{ width: "40px", marginTop: "5px" }} />
+            <BookIcon style={{ width: "40px", marginTop: "-5px" }} />
           </Box>
         </Link>
-        <BottomNavigation sx={{ gap: 2, justifyContent: "center" }}>
-          <Link to={"/"}>
-            <Button variant="contained" color="primary">
-              Home
-            </Button>
-          </Link>
-          <Link to={"/dashboard"}>
-            <Button variant="contained" color="primary">
-              Dashboard
-            </Button>
-          </Link>
-        </BottomNavigation>
       </Container>
+      <BottomNavigation
+        sx={{
+          gap: 2,
+          justifyContent: "center",
+          alignItems: "center",
+          pb: 2,
+          borderTop: "1px solid #E89B60",
+          width: "100%",
+        }}
+      >
+        <Link to={"/collection"}>
+          <Button variant="contained" color="primary" style={{ fontSize: "0.5em" }}>
+            Critter Collection
+          </Button>
+        </Link>
+        <Link to={"/"}>
+          <Button variant="contained" color="primary">
+            Home
+          </Button>
+        </Link>
+        <Link to={"/hatchery"} style={{ textDecoration: "none" }}>
+          {/* <EggIcon style={{ width: "40px" }} /> */}
+          <Button variant="contained" color="primary">
+            Hatchery
+          </Button>
+        </Link>
+      </BottomNavigation>
     </div>
   );
 }
