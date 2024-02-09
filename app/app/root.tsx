@@ -8,6 +8,8 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { CrittersTheme } from "./utils/theme";
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
@@ -23,7 +25,12 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Outlet />
+        <CssBaseline />
+
+        <ThemeProvider theme={CrittersTheme}>
+          <Outlet />
+        </ThemeProvider>
+
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
