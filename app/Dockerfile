@@ -8,4 +8,4 @@ COPY ./app .
 RUN npm run prisma:generate
 RUN npm run build
 
-CMD ["sh", "prod.sh"]
+CMD ["sh", "docker-entrypoint.sh"]
