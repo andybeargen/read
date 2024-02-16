@@ -4,4 +4,4 @@ set -e
 
 npm run prisma:migrate
 
-exec npm run start
+exec "/app/node_modules/.bin/remix-serve" "/app/build/index.js"
