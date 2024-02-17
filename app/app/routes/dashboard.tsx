@@ -43,7 +43,7 @@ export default function Dashboard() {
           alignItems: "center",
         }}
       >
-        <div
+        <Box
           style={{
             background: "linear-gradient(to top, #E89B60, #98C9FF)",
             height: "50vh",
@@ -56,15 +56,16 @@ export default function Dashboard() {
           }}
         />
 
-        <Box
-          display={"flex"}
-          flexDirection={"row"}
-          justifyContent={"space-between"}
-          width={"100%"}
-          pl={0}
-          pr={0}
-          height={"7%"}
-          maxWidth={"1200px"}
+        <Container
+          sx={{
+            display: "flex",
+            height: "7%",
+            justifyContent: "space-between",
+            maxWidth: "1200px",
+            padding: 0,
+            position: "relative",
+            top: "2rem",
+          }}
         >
           <IconButton
             aria-label="settings"
@@ -76,7 +77,8 @@ export default function Dashboard() {
           </IconButton>
 
           <CoinCount count={1231} />
-        </Box>
+        </Container>
+
         <Container
           sx={{
             height: "93%",
@@ -116,7 +118,7 @@ export default function Dashboard() {
           </Container>
 
           <Link
-            to={"/library/1"}
+            to={"/library"}
             style={{
               textDecoration: "none",
               alignItems: "center",

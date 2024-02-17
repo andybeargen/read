@@ -12,29 +12,7 @@ import {
 import { Link, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 
-import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { AuthenticatedLayout } from "~/components";
-import { getUserLibrary } from "~/models/book.server";
-import { commitSession, getSession } from "~/utils/sessions";
-
-export async function loader({ request }: LoaderFunctionArgs) {
-  const session = await getSession(request.headers.get("Cookie"));
-
-  // get userid from session
-  const userId = session.get("userId");
-
-  // get books
-  const books = userId != undefined ? await getUserLibrary(userId) : [];
-
-  return json(
-    { books },
-    {
-      headers: {
-        "Set-Cookie": await commitSession(session),
-      },
-    },
-  );
-}
 
 const BookCard = styled(Paper)(({ theme }) => ({
   backgroundColor: "#808080",
