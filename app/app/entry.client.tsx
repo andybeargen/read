@@ -36,14 +36,14 @@ function ClientCacheProvider({ children }: ClientCacheProviderProps) {
 startTransition(() => {
   hydrateRoot(
     document,
-    <ClientCacheProvider>
-      <StrictMode>
+    <StrictMode>
+      <ClientCacheProvider>
         <ThemeProvider theme={CrittersTheme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
           <RemixBrowser />
         </ThemeProvider>
-      </StrictMode>
-    </ClientCacheProvider>,
+      </ClientCacheProvider>
+    </StrictMode>
   );
 });
