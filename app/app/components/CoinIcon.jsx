@@ -90,5 +90,5 @@ const CoinIcon = (props) => (
       }}
     />
   </svg>
-)
+);
 export default CoinIcon;

@@ -14,7 +14,14 @@ import CoinIcon from "../components/CoinIcon";
 
 export default function Dashboard() {
   return (
-    <div style={{ height: "100vh", display: "flex", flexDirection: "column", alignItems: "center" }}>
+    <div
+      style={{
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <div
         style={{
           background: "linear-gradient(to top, #E89B60, #98C9FF)",

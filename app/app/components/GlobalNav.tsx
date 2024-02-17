@@ -1,7 +1,4 @@
-import {
-  BottomNavigation,
-  Button
-} from "@mui/material";
+import { BottomNavigation, Button } from "@mui/material";
 import { Link } from "@remix-run/react";
 
 /**
@@ -20,7 +17,11 @@ export const GlobalNav = () => {
       }}
     >
       <Link to={"/collection"}>
-        <Button variant="contained" color="primary" style={{ fontSize: "0.5em" }}>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ fontSize: "0.5em" }}
+        >
           Critter Collection
         </Button>
       </Link>
@@ -36,5 +37,5 @@ export const GlobalNav = () => {
         </Button>
       </Link>
     </BottomNavigation>
-  )
+  );
 };
