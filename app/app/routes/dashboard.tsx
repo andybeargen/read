@@ -1,6 +1,6 @@
 import { Box, Container, IconButton, Typography } from "@mui/material";
 import { LoaderFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import {
   AuthenticatedLayout,
   BookIcon,
@@ -8,6 +8,7 @@ import {
   SettingsIcon,
 } from "~/components";
 import { authenticator } from "~/utils/auth.server";
+import { User } from '@prisma/client';
 
 const CoinCount = ({ count }: { count: number }) => {
   return (
@@ -35,6 +36,8 @@ const CoinCount = ({ count }: { count: number }) => {
 };
 
 export default function Dashboard() {
+  const user: User = useLoaderData<typeof loader>();
+
   return (
     <AuthenticatedLayout>
       <Container
@@ -78,7 +81,7 @@ export default function Dashboard() {
             <SettingsIcon style={{ height: "100%", position: "relative" }} />
           </IconButton>
 
-          <CoinCount count={1231} />
+          <CoinCount count={user.coins} />
         </Container>
 
         <Container
@@ -159,9 +162,7 @@ export default function Dashboard() {
 // detect if user is logged in
 export const loader: LoaderFunction = async ({ request }) => {
   // if the user is authenticated, redirect to /dashboard
-  await authenticator.isAuthenticated(request, {
+  return await authenticator.isAuthenticated(request, {
     failureRedirect: "/",
   });
-
-  return {};
 }
