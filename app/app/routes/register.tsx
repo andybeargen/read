@@ -6,7 +6,7 @@ import {
 } from "@remix-run/node";
 import { createUser } from "~/models/user.server";
 import { Form, Link, useLoaderData } from "@remix-run/react";
-import { commitSession, getSession } from "~/utils/sessions";
+import { commitSession, getSession } from "~/utils/sessions.server";
 import { Typography } from "@mui/material";
 
 export async function loader({ request }: LoaderFunctionArgs) {

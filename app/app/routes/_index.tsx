@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
 import { Link, redirect } from "@remix-run/react";
-import { getSession } from "~/utils/sessions";
+import { getSession } from "~/utils/sessions.server";
 
 export const meta: MetaFunction = () => {
   return [

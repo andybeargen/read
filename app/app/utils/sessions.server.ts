@@ -14,10 +14,15 @@ const { getSession, commitSession, destroySession } =
     cookie: {
       name: "__session",
       maxAge: 60 * 60 * 24 * 30, // 30 days
+
       // TODO: set this as an environment variable
       secrets: [
         "i am a secret that is super secure and totally should not be an env var",
       ],
+      secure: process.env.NODE_ENV === "production",
+
+      // helps prevent CSRF attacks
+      sameSite: "lax",
     },
   });
 

@@ -10,7 +10,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { RemixBrowser } from "@remix-run/react";
 import { startTransition, StrictMode, useState } from "react";
 import ClientStyleContext from "~/contexts/ClientStyleContext";
-import { CrittersTheme } from "./utils/theme";
+import { CrittersTheme } from "./utils/theme.client";
 import createEmotionCache from "@emotion/cache";
 import { hydrateRoot } from "react-dom/client";
 
