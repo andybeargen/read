@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import type { MetaFunction } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 
@@ -11,7 +12,7 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return (
     <>
-      <h1>Lit Critters</h1>
+      <Typography component="h1" variant="h1">Start reading</Typography>
       <Link to={"/login"}>Login</Link>
       <Link to={"/register"}>Register</Link>
     </>

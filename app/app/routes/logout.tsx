@@ -1,6 +1,7 @@
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { getSession, destroySession } from "../sessions";
 import { Form, Link } from "@remix-run/react";
+import { Typography } from "@mui/material";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
@@ -14,7 +15,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function LogoutRoute() {
   return (
     <>
-      <p>Are you sure you want to log out?</p>
+      <Typography variant="h1">Are you sure you want to logout?</Typography>
       <Form method="post" action="/logout">
         <button>Logout</button>
       </Form>

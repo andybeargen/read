@@ -1,4 +1,4 @@
-import { CssBaseline } from "@mui/material";
+import { CssBaseline, Typography } from "@mui/material";
 import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction } from "@remix-run/node";
 import {
@@ -47,13 +47,13 @@ export function ErrorBoundary() {
         <Links />
       </head>
       <body>
-        <h1>
+        <Typography variant="h1">
           {isRouteErrorResponse(error)
             ? `${error.status} ${error.statusText}`
             : error instanceof Error
               ? error.message
               : "Unknown Error"}
-        </h1>
+        </Typography>
         <Scripts />
       </body>
     </html>

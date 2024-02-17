@@ -7,6 +7,7 @@ import {
 import { createUser } from "~/models/user.server";
 import { Form, Link, useLoaderData } from "@remix-run/react";
 import { commitSession, getSession } from "~/sessions";
+import { Typography } from "@mui/material";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
@@ -66,7 +67,7 @@ export default function Register() {
 
   return (
     <>
-      <h1>Register</h1>
+      <Typography component="h1" variant="h1"> Register </Typography>
       {error ? <div className="error">{error}</div> : null}
       <Form method="post" action="/register">
         <label>
