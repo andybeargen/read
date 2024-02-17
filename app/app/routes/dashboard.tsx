@@ -1,4 +1,5 @@
 import { Box, Container, IconButton, Typography } from "@mui/material";
+import { LoaderFunction } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import {
   AuthenticatedLayout,
@@ -6,6 +7,7 @@ import {
   CoinIcon,
   SettingsIcon,
 } from "~/components";
+import { authenticator } from "~/utils/auth.server";
 
 const CoinCount = ({ count }: { count: number }) => {
   return (
@@ -152,4 +154,14 @@ export default function Dashboard() {
       </Container>
     </AuthenticatedLayout>
   );
+}
+
+// detect if user is logged in
+export const loader: LoaderFunction = async ({ request }) => {
+  // if the user is authenticated, redirect to /dashboard
+  await authenticator.isAuthenticated(request, {
+    failureRedirect: "/",
+  });
+
+  return {};
 }

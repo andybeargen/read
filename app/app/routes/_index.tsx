@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
-import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
-import { Link, redirect } from "@remix-run/react";
-import { getSession } from "~/utils/sessions.server";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import { Link } from "@remix-run/react";
+import { authenticator } from "~/utils/auth.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -11,12 +11,11 @@ export const meta: MetaFunction = () => {
 };
 
 // detect if user is logged in
-export async function loader({ request }: ActionFunctionArgs) {
-  const session = await getSession(request.headers.get("Cookie"));
-
-  if (session.has("userId")) {
-    return redirect("/dashboard");
-  }
+export const loader: LoaderFunction = async ({ request }) => {
+  // if the user is authenticated, redirect to /dashboard
+  await authenticator.isAuthenticated(request, {
+    successRedirect: "/dashboard",
+  });
 
   return {};
 }

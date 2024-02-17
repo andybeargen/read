@@ -1,26 +1,23 @@
 import type {
   ActionFunction,
-  ActionFunctionArgs,
-  LoaderFunction,
-  LoaderFunctionArgs,
+  LoaderFunction
 } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Form, useLoaderData, useSubmit } from "@remix-run/react";
+import { json } from "@remix-run/node";
+import { Form, useLoaderData } from "@remix-run/react";
 
-import { getSession, commitSession } from "~/utils/sessions.server";
-import { loginUser } from "~/models/user.server";
-import { authenticator } from "../utils/auth.server";
+import { commitSession, getSession } from "~/utils/sessions.server";
+import { authenticator } from "~/utils/auth.server";
 
 import {
-  Button,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Link,
-  Grid,
   Box,
-  Typography,
+  Button,
+  Checkbox,
   Container,
+  FormControlLabel,
+  Grid,
+  Link,
+  TextField,
+  Typography,
 } from "@mui/material";
 
 /**
@@ -49,7 +46,7 @@ export const loader: LoaderFunction = async ({ request }) => {
  * Called when the user submits the login form
  */
 export const action: ActionFunction = async ({ request, context }) => {
-  return await authenticator.authenticate("user-pass", request, {
+  return await authenticator.authenticate("email-pass", request, {
     successRedirect: "/dashboard",
     failureRedirect: "/login",
     throwOnError: true,
@@ -58,7 +55,7 @@ export const action: ActionFunction = async ({ request, context }) => {
 };
 
 export default function Login() {
-  const loaderData = useLoaderData();
+  const loaderData = useLoaderData<typeof loader>();
 
   return (
     <Container component="main" maxWidth="xs">

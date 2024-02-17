@@ -9,10 +9,12 @@ import {
   Typography,
   styled,
 } from "@mui/material";
+import { LoaderFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 
 import { AuthenticatedLayout } from "~/components";
+import { authenticator } from "~/utils/auth.server";
 
 const BookCard = styled(Paper)(({ theme }) => ({
   backgroundColor: "#808080",
@@ -191,4 +193,14 @@ export default function Library() {
       </Box>
     </AuthenticatedLayout>
   );
+}
+
+// detect if user is logged in
+export const loader: LoaderFunction = async ({ request }) => {
+  // if the user is authenticated, redirect to /dashboard
+  await authenticator.isAuthenticated(request, {
+    failureRedirect: "/",
+  });
+
+  return {};
 }
