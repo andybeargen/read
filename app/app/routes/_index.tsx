@@ -24,7 +24,9 @@ export async function loader({ request }: ActionFunctionArgs) {
 export default function Index() {
   return (
     <>
-      <Typography component="h1" variant="h1">Start reading</Typography>
+      <Typography component="h1" variant="h1">
+        Start reading
+      </Typography>
       <Link to={"/login"}>Login</Link>
       <Link to={"/register"}>Register</Link>
     </>

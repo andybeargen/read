@@ -67,7 +67,10 @@ export default function Register() {
 
   return (
     <>
-      <Typography component="h1" variant="h1"> Register </Typography>
+      <Typography component="h1" variant="h1">
+        {" "}
+        Register{" "}
+      </Typography>
       {error ? <div className="error">{error}</div> : null}
       <Form method="post" action="/register">
         <label>

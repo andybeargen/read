@@ -1,16 +1,9 @@
+import { Box, Container, Typography } from "@mui/material";
 import { Link } from "@remix-run/react";
-import {
-  BottomNavigation,
-  Button,
-  Container,
-  Typography,
-  Box,
-} from "@mui/material";
 import { GlobalNav } from "~/components/GlobalNav";
-import BookIcon from "../components/BookIcon";
-import EggIcon from "../components/EggIcon";
-import SettingsIcon from "../components/SettingsIcon";
-import CoinIcon from "../components/CoinIcon";
+import BookIcon from "~/components/icons/BookIcon";
+import CoinIcon from "~/components/icons/CoinIcon";
+import SettingsIcon from "~/components/icons/SettingsIcon";
 
 export default function Dashboard() {
   return (

@@ -76,11 +76,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function Login() {
   const { error } = useLoaderData<typeof loader>();
-  const submit = useSubmit();
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    submit(event.currentTarget, { replace: true });
-  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -96,7 +91,7 @@ export default function Login() {
           Welcome to LitCritters
         </Typography>
 
-        <Form onSubmit={handleSubmit}>
+        <Form action="/login" method="post">
           <TextField
             margin="normal"
             required
