@@ -23,7 +23,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (session.has("userId")) {
     const userId = session.get("userId");
     if (userId != undefined) {
-      return redirect("/dashboard/".concat(userId));
+      return redirect("/dashboard");
     }
   }
 
@@ -67,7 +67,7 @@ export async function action({ request }: ActionFunctionArgs) {
   session.set("userId", userId);
 
   // Login succeeded, send them to the home page.
-  return redirect("/dashboard/".concat(userId), {
+  return redirect("/dashboard", {
     headers: {
       "Set-Cookie": await commitSession(session),
     },
@@ -79,7 +79,6 @@ export default function Login() {
   const submit = useSubmit();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
     submit(event.currentTarget, { replace: true });
   };
 

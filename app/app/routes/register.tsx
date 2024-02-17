@@ -55,7 +55,7 @@ export async function action({ request }: ActionFunctionArgs) {
   session.set("userId", userId);
 
   // Login succeeded, send them to the home page.
-  return redirect("/dashboard/".concat(userId), {
+  return redirect("/dashboard", {
     headers: {
       "Set-Cookie": await commitSession(session),
     },
