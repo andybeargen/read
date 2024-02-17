@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Container, IconButton, Typography } from "@mui/material";
 import { Link } from "@remix-run/react";
 import {
   AuthenticatedLayout,
@@ -6,6 +6,31 @@ import {
   CoinIcon,
   SettingsIcon,
 } from "~/components";
+
+const CoinCount = ({ count }: { count: number }) => {
+  return (
+    <Box
+      display={"flex"}
+      flexDirection={"row"}
+      alignItems={"center"}
+      gap={1}
+      bgcolor={"#0045bd"}
+      borderRadius={"30px"}
+      px={1}
+      py={0.5}
+    >
+      <Typography
+        fontFamily={"monospace"}
+        variant="h6"
+        component="h1"
+        color={"white"}
+      >
+        {count}
+      </Typography>
+      <CoinIcon style={{ width: "30px" }} />
+    </Box>
+  );
+};
 
 export default function Dashboard() {
   return (
@@ -27,9 +52,10 @@ export default function Dashboard() {
             left: 0,
             right: 0,
             zIndex: -1,
-            borderRadius: "0 0 50% 50%",
+            borderRadius: "0 0 9999% 9999%",
           }}
-        ></div>
+        />
+
         <Box
           display={"flex"}
           flexDirection={"row"}
@@ -40,29 +66,16 @@ export default function Dashboard() {
           height={"7%"}
           maxWidth={"1200px"}
         >
-          <Link to={"/settings"} style={{ height: "100%" }}>
-            <SettingsIcon style={{ height: "100%", position: "relative" }} />
-          </Link>
-          <Box
-            display={"flex"}
-            flexDirection={"row"}
-            alignItems={"center"}
-            gap={1}
-            bgcolor={"#0045bd"}
-            borderRadius={"30px"}
-            px={1}
-            py={0.5}
+          <IconButton
+            aria-label="settings"
+            style={{ height: "100%" }}
+            component={Link}
+            to={"/settings"}
           >
-            <Typography
-              fontFamily={"monospace"}
-              variant="h6"
-              component="h1"
-              color={"white"}
-            >
-              100
-            </Typography>
-            <CoinIcon style={{ width: "30px" }} />
-          </Box>
+            <SettingsIcon style={{ height: "100%", position: "relative" }} />
+          </IconButton>
+
+          <CoinCount count={1231} />
         </Box>
         <Container
           sx={{
