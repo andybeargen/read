@@ -1,20 +1,15 @@
 import {
-  BottomNavigation,
-  BottomNavigationAction,
-  Button,
-  Paper,
-} from "@mui/material";
-import { Link, useLocation } from "@remix-run/react";
-import HomeIcon from "~/components/icons/HomeIcon";
-import EggIcon from "~/components/icons/EggIcon";
-import CollectionIcon from "~/components/icons/CoinIcon";
-import BookIcon from "~/components/icons/BookIcon";
-import {
   AutoStoriesRounded,
   EggRounded,
   HomeRounded,
   PetsRounded,
 } from "@mui/icons-material";
+import {
+  BottomNavigation,
+  BottomNavigationAction,
+  Paper
+} from "@mui/material";
+import { Link, useLocation } from "@remix-run/react";
 
 declare type NavLink = {
   label: string;

@@ -1,22 +1,21 @@
-import { useState } from "react";
-import { Link, useLoaderData } from "@remix-run/react";
-import {
-  Button,
-  Typography,
-  Box,
-  Container,
-  InputBase,
-  AppBar,
-  styled,
-  Grid,
-  Paper,
-} from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
+import {
+  AppBar,
+  Box,
+  Button,
+  Grid,
+  InputBase,
+  Paper,
+  Typography,
+  styled
+} from "@mui/material";
+import { Link, useLoaderData } from "@remix-run/react";
+import { useState } from "react";
 
-import { getSession, commitSession } from "../sessions";
-import { LoaderFunctionArgs, json, redirect } from "@remix-run/node";
+import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { AuthenticatedLayout } from "~/components";
 import { getUserLibrary } from "~/models/book.server";
-import AuthenticatedLayout from "~/components/AuthenticatedLayout";
+import { commitSession, getSession } from "../sessions";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
