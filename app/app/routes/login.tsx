@@ -1,6 +1,6 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs, } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData, useSubmit } from "@remix-run/react";
 
 import { getSession, commitSession } from "../sessions";
 import { loginUser } from "~/models/user.server";
@@ -14,13 +14,11 @@ import {
   Grid,
   Box,
   Typography,
-  Container
-} from '@mui/material'
+  Container,
+} from "@mui/material";
 
-export async function loader({ request, }: LoaderFunctionArgs) {
-  const session = await getSession(
-    request.headers.get("Cookie")
-  );
+export async function loader({ request }: LoaderFunctionArgs) {
+  const session = await getSession(request.headers.get("Cookie"));
 
   if (session.has("userId")) {
     const userId = session.get("userId");
@@ -38,10 +36,8 @@ export async function loader({ request, }: LoaderFunctionArgs) {
   });
 }
 
-export async function action({ request, }: ActionFunctionArgs) {
-  const session = await getSession(
-    request.headers.get("Cookie")
-  );
+export async function action({ request }: ActionFunctionArgs) {
+  const session = await getSession(request.headers.get("Cookie"));
   const form = await request.formData();
   const email = form.get("email");
   const password = form.get("password");
@@ -80,6 +76,12 @@ export async function action({ request, }: ActionFunctionArgs) {
 
 export default function Login() {
   const { error } = useLoaderData<typeof loader>();
+  const submit = useSubmit();
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    submit(event.currentTarget, { replace: true });
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -91,14 +93,11 @@ export default function Login() {
           alignItems: "center",
         }}
       >
-        <Typography component="h1" variant="h3" style={{ textAlign: 'center' }}>
-          Welcome to Pokémon Read
-        </Typography>
-        <Typography component="p" variant="h5" style={{ textAlign: 'center' }}>
-          Please enter your email and password in to continue.
+        <Typography component="h1" variant="h3" style={{ textAlign: "center" }}>
+          Welcome to LitCritters
         </Typography>
 
-        <Form action="/login" method="post">
+        <Form onSubmit={handleSubmit}>
           <TextField
             margin="normal"
             required
