@@ -7,7 +7,7 @@ import {
   InputBase,
   Paper,
   Typography,
-  styled
+  styled,
 } from "@mui/material";
 import { Link, useLoaderData } from "@remix-run/react";
 import { useState } from "react";

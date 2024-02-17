@@ -1,9 +1,5 @@
-import { AuthenticatedLayout } from '~/components/AuthenticatedLayout';
+import { AuthenticatedLayout } from "~/components/AuthenticatedLayout";
 
 export default function CollectionRoute() {
-    return (
-        <AuthenticatedLayout>
-            Collection
-        </AuthenticatedLayout>
-    );
+  return <AuthenticatedLayout>Collection</AuthenticatedLayout>;
 }
