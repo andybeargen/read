@@ -1,6 +1,11 @@
 import { Box, Container, Typography } from "@mui/material";
 import { Link } from "@remix-run/react";
-import { AuthenticatedLayout, BookIcon, CoinIcon, SettingsIcon } from "~/components";
+import {
+  AuthenticatedLayout,
+  BookIcon,
+  CoinIcon,
+  SettingsIcon,
+} from "~/components";
 
 export default function Dashboard() {
   return (

@@ -3,17 +3,20 @@ import {
   EggRounded,
   HomeRounded,
   PetsRounded,
+  SettingsRounded,
+  AutoStoriesOutlined,
+  EggOutlined,
+  HomeOutlined,
+  PetsOutlined,
+  SettingsOutlined,
 } from "@mui/icons-material";
-import {
-  BottomNavigation,
-  BottomNavigationAction,
-  Paper
-} from "@mui/material";
+import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
 import { Link, useLocation } from "@remix-run/react";
 
 declare type NavLink = {
   label: string;
-  icon: JSX.Element;
+  activeIcon: JSX.Element;
+  inactiveIcon: JSX.Element;
   to: string;
 };
 
@@ -24,10 +27,36 @@ export const GlobalNav = () => {
   const location = useLocation();
 
   const NavLinks: NavLink[] = [
-    { label: "Home", icon: <HomeRounded />, to: "/dashboard" },
-    { label: "Collection", icon: <PetsRounded />, to: "/collection" },
-    { label: "Library", icon: <AutoStoriesRounded />, to: "/library" },
-    { label: "Hatchery", icon: <EggRounded />, to: "/hatchery" },
+    {
+      label: "Home",
+      activeIcon: <HomeRounded />,
+      inactiveIcon: <HomeOutlined />,
+      to: "/dashboard",
+    },
+    {
+      label: "Collection",
+      activeIcon: <PetsRounded />,
+      inactiveIcon: <PetsOutlined />,
+      to: "/collection",
+    },
+    {
+      label: "Library",
+      activeIcon: <AutoStoriesRounded />,
+      inactiveIcon: <AutoStoriesOutlined />,
+      to: "/library",
+    },
+    {
+      label: "Hatchery",
+      activeIcon: <EggRounded />,
+      inactiveIcon: <EggOutlined />,
+      to: "/hatchery",
+    },
+    {
+      label: "Settings",
+      activeIcon: <SettingsRounded />,
+      inactiveIcon: <SettingsOutlined />,
+      to: "/settings",
+    },
   ];
 
   const getActiveIndex = () => {
@@ -47,7 +76,7 @@ export const GlobalNav = () => {
           <BottomNavigationAction
             key={index}
             label={link.label}
-            icon={link.icon}
+            icon={ index === getActiveIndex() ? link.activeIcon : link.inactiveIcon }
             component={Link}
             to={link.to}
           />
