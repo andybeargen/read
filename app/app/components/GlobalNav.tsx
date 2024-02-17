@@ -50,13 +50,7 @@ export const GlobalNav = () => {
       activeIcon: <EggRounded />,
       inactiveIcon: <EggOutlined />,
       to: "/hatchery",
-    },
-    {
-      label: "Settings",
-      activeIcon: <SettingsRounded />,
-      inactiveIcon: <SettingsOutlined />,
-      to: "/settings",
-    },
+    }
   ];
 
   const getActiveIndex = () => {
