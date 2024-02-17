@@ -1,5 +1,5 @@
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
-import { getSession, destroySession } from "~/sessions";
+import { getSession, destroySession } from "~/utils/sessions";
 import { Form, Link } from "@remix-run/react";
 import { Typography } from "@mui/material";
 

@@ -2,7 +2,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData, useSubmit } from "@remix-run/react";
 
-import { getSession, commitSession } from "../sessions";
+import { getSession, commitSession } from "~/utils/sessions";
 import { loginUser } from "~/models/user.server";
 
 import {

@@ -50,7 +50,7 @@ export const GlobalNav = () => {
       activeIcon: <EggRounded />,
       inactiveIcon: <EggOutlined />,
       to: "/hatchery",
-    }
+    },
   ];
 
   const getActiveIndex = () => {
@@ -70,7 +70,9 @@ export const GlobalNav = () => {
           <BottomNavigationAction
             key={index}
             label={link.label}
-            icon={ index === getActiveIndex() ? link.activeIcon : link.inactiveIcon }
+            icon={
+              index === getActiveIndex() ? link.activeIcon : link.inactiveIcon
+            }
             component={Link}
             to={link.to}
           />
