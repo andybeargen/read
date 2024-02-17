@@ -16,6 +16,7 @@ import { Search as SearchIcon } from "@mui/icons-material";
 import { getSession, commitSession } from "../sessions";
 import { LoaderFunctionArgs, json, redirect } from "@remix-run/node";
 import { getUserLibrary } from "~/models/book.server";
+import AuthenticatedLayout from "~/components/AuthenticatedLayout";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
@@ -93,12 +94,7 @@ export default function Library() {
   };
 
   return (
-    <Container
-      maxWidth={false}
-      sx={{
-        padding: 0,
-      }}
-    >
+    <AuthenticatedLayout>
       <AppBar position="static" elevation={0}>
         <Box
           sx={{
@@ -219,6 +215,6 @@ export default function Library() {
           </Grid>
         </Grid>
       </Box>
-    </Container>
+    </AuthenticatedLayout>
   );
 }

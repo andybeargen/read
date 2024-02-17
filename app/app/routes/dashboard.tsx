@@ -1,25 +1,18 @@
 import { Box, Container, Typography } from "@mui/material";
 import { Link } from "@remix-run/react";
-import { GlobalNav } from "~/components/GlobalNav";
+import { AuthenticatedLayout } from "~/components/AuthenticatedLayout";
 import BookIcon from "~/components/icons/BookIcon";
 import CoinIcon from "~/components/icons/CoinIcon";
 import SettingsIcon from "~/components/icons/SettingsIcon";
 
 export default function Dashboard() {
   return (
-    <div
-      style={{
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
+    <AuthenticatedLayout>
       <div
         style={{
           background: "linear-gradient(to top, #E89B60, #98C9FF)",
           height: "50vh",
-          position: "fixed",
+          position: "absolute",
           top: 0,
           left: 0,
           right: 0,
@@ -131,8 +124,6 @@ export default function Dashboard() {
           </Box>
         </Link>
       </Container>
-
-      <GlobalNav />
-    </div>
+    </AuthenticatedLayout>
   );
 }

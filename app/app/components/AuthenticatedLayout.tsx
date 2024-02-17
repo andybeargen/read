@@ -1,3 +1,4 @@
+import { Container } from "@mui/material";
 import { GlobalNav } from "./GlobalNav";
 import { forwardRef } from "react";
 
@@ -9,12 +10,12 @@ export const AuthenticatedLayout = forwardRef<
   { children: React.ReactNode }
 >(({ children }, ref) => {
   return (
-    <main ref={ref} style={{
+    <Container component="main" ref={ref} style={{
       height: "100vh"
     }}>
       <GlobalNav />
       {children}
-    </main>
+    </Container>
   );
 });
 
