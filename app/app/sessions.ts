@@ -14,6 +14,8 @@ const { getSession, commitSession, destroySession } =
     cookie: {
       name: "__session",
       maxAge: 60,
+      // TODO: set this as an environment variable
+      secrets: ["i am a secret that is super secure and totally should not be an env var"],
     },
   });
 
