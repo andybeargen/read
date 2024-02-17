@@ -18,6 +18,7 @@ interface ClientCacheProviderProps {
   children: React.ReactNode;
 }
 
+// https://github.com/mui/material-ui/issues/30436#issuecomment-1003339715
 function ClientCacheProvider({ children }: ClientCacheProviderProps) {
   const [cache, setCache] = useState(createEmotionCache({ key: "css" }));
 
