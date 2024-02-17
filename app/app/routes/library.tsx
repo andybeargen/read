@@ -15,7 +15,7 @@ import { useState } from "react";
 import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { AuthenticatedLayout } from "~/components";
 import { getUserLibrary } from "~/models/book.server";
-import { commitSession, getSession } from "../sessions";
+import { commitSession, getSession } from "~/utils/sessions";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
@@ -110,10 +110,7 @@ export default function Library() {
           >
             <Typography
               variant="h4"
-              fontWeight="bold"
               style={{ wordWrap: "break-word" }}
-              component="div"
-              display="block"
               color="#0c174b"
               padding="30px 0px 0px 0px"
             >
@@ -123,7 +120,7 @@ export default function Library() {
 
           <Box
             sx={{
-              padding: "15px 30px 15px 30px",
+              padding: "15px 30px",
             }}
           >
             <Search>
@@ -185,7 +182,7 @@ export default function Library() {
                     backgroundRepeat: "no-repeat",
                     backgroundSize: 155,
                   }}
-                ></BookCard>
+                />
                 <Box
                   sx={{
                     width: 110,
