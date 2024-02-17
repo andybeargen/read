@@ -1,6 +1,7 @@
 import { Typography } from "@mui/material";
-import type { MetaFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
+import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
+import { Link, redirect } from "@remix-run/react";
+import { getSession } from "~/sessions";
 
 export const meta: MetaFunction = () => {
   return [
@@ -8,6 +9,17 @@ export const meta: MetaFunction = () => {
     { name: "description", content: "Your one stop shop for reading books" },
   ];
 };
+
+// detect if user is logged in
+export async function loader({ request }: ActionFunctionArgs) {
+  const session = await getSession(request.headers.get("Cookie"));
+
+  if (session.has("userId")) {
+    return redirect("/dashboard");
+  }
+
+  return {};
+}
 
 export default function Index() {
   return (
