@@ -1,41 +1,62 @@
-import { BottomNavigation, Button } from "@mui/material";
-import { Link } from "@remix-run/react";
+import {
+  BottomNavigation,
+  BottomNavigationAction,
+  Button,
+  Paper,
+} from "@mui/material";
+import { Link, useLocation } from "@remix-run/react";
+import HomeIcon from "~/components/icons/HomeIcon";
+import EggIcon from "~/components/icons/EggIcon";
+import CollectionIcon from "~/components/icons/CoinIcon";
+import BookIcon from "~/components/icons/BookIcon";
+import { AutoStoriesRounded, EggRounded, HomeRounded, PetsRounded } from "@mui/icons-material";
+
+declare type NavLink = {
+  label: string;
+  icon: JSX.Element;
+  to: string;
+};
 
 /**
  * Global navigation component
  */
 export const GlobalNav = () => {
+  const location = useLocation();
+
+  const NavLinks: NavLink[] = [
+    { label: "Home", icon: <HomeRounded />, to: "/dashboard" },
+    { label: "Collection", icon: <PetsRounded />, to: "/collection" },
+    { label: "Library", icon: <AutoStoriesRounded />, to: "/library" },
+    { label: "Hatchery", icon: <EggRounded />, to: "/hatchery" },
+  ]
+
+  const getActiveIndex = () => {
+    const path = location.pathname;
+    const index = NavLinks.findIndex((link) => link.to === path);
+    return index;
+  }
+
   return (
-    <BottomNavigation
-      sx={{
-        gap: 2,
-        justifyContent: "center",
-        alignItems: "center",
-        pb: 2,
-        borderTop: "1px solid #E89B60",
-        width: "100%",
-      }}
+    <Paper
+      sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
+      elevation={3}
     >
-      <Link to={"/collection"}>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ fontSize: "0.5em" }}
-        >
-          Critter Collection
-        </Button>
-      </Link>
-      <Link to={"/"}>
-        <Button variant="contained" color="primary">
-          Home
-        </Button>
-      </Link>
-      <Link to={"/hatchery"} style={{ textDecoration: "none" }}>
-        {/* <EggIcon style={{ width: "40px" }} /> */}
-        <Button variant="contained" color="primary">
-          Hatchery
-        </Button>
-      </Link>
-    </BottomNavigation>
+      <BottomNavigation
+        showLabels
+        value={getActiveIndex()}
+      >
+        {
+          NavLinks.map((link, index) => (
+            <BottomNavigationAction
+              key={index}
+              label={link.label}
+              icon={link.icon}
+              component={Link}
+              to={link.to}
+            />
+          ))
+        }
+      </BottomNavigation>
+    </Paper>
   );
 };

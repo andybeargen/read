@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useState } from "react";
 import { Link, useLoaderData } from "@remix-run/react";
 import {
@@ -21,22 +20,11 @@ import { getUserLibrary } from "~/models/book.server";
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
 
-  let userId;
-
-  // check if correct user
-  if (session.has("userId")) {
-    userId = session.get("userId");
-    let urlUserId = request.url.split("/").pop();
-
-    if (urlUserId != userId) {
-      return redirect("/login");
-    }
-  } else {
-    return redirect("/login");
-  }
+  // get userid from session
+  const userId = session.get("userId");
 
   // get books
-  let books = userId != undefined ? await getUserLibrary(userId) : [];
+  const books = userId != undefined ? await getUserLibrary(userId) : [];
 
   return json(
     { books },
