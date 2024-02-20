@@ -11,6 +11,28 @@ import BookIcon from "../components/BookIcon";
 import EggIcon from "../components/EggIcon";
 import SettingsIcon from "../components/SettingsIcon";
 import CoinIcon from "../components/CoinIcon";
+import { commitSession, getSession } from "~/sessions";
+import { LoaderFunctionArgs, json, redirect } from "@remix-run/node";
+
+export async function loader({request,}: LoaderFunctionArgs) {
+    const session = await getSession(
+        request.headers.get("Cookie")
+    );
+
+    let userId;
+
+    if (session.has("userId")) {
+        userId = session.get("userId");
+    } else {
+        return redirect("/login");
+    }
+
+    return json({ userId }, {
+        headers: {
+        "Set-Cookie": await commitSession(session),
+        },
+    });
+}
 
 export default function Dashboard() {
   return (
@@ -107,7 +129,7 @@ export default function Dashboard() {
         </Container>
 
         <Link
-          to={"/library/1"}
+          to={"/library"}
           style={{
             textDecoration: "none",
             alignItems: "center",

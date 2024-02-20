@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Form, Link, useLoaderData } from "@remix-run/react";
 import {
   Button,
   Typography,
@@ -11,12 +11,40 @@ import {
   styled,
   Grid,
   Paper,
+  Modal,
+  TextField,
 } from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
 
 import { getSession, commitSession } from "../sessions";
-import { LoaderFunctionArgs, json, redirect } from "@remix-run/node";
-import { getUserLibrary } from "~/models/book.server";
+import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from "@remix-run/node";
+import { createBook, getUserLibrary } from "~/models/book.server";
+import { parseEpub } from "~/utils/epub";
+
+export async function action({ request }: ActionFunctionArgs) {
+  const session = await getSession(
+    request.headers.get("Cookie")
+  );
+
+  let userId;
+
+  if (session.has("userId")) {
+    userId = session.get("userId");
+  } else {
+    return redirect("/login");
+  }
+
+  let body = await request.formData();
+  let epubFile = body.get("file") as File;
+
+  if (epubFile) {
+    let epubInfo = await parseEpub(epubFile);
+    let bookData = {...epubInfo, user: {connect: {id: userId as string}}};
+    let book = await createBook(bookData);
+  }
+
+  return {};
+}
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
@@ -26,17 +54,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
   // check if correct user
   if (session.has("userId")) {
     userId = session.get("userId");
-    let urlUserId = request.url.split("/").pop();
-
-    if (urlUserId != userId) {
-      return redirect("/login");
-    }
   } else {
     return redirect("/login");
   }
 
   // get books
-  let books = userId != undefined ? await getUserLibrary(userId) : [];
+  let books: any = userId != undefined ? await getUserLibrary(userId) : [];
+  books.forEach((book: any) => {
+      if (book.image) {
+        book.image = "data:image/jpeg;base64," + book.image.toString('base64');
+      } else {
+        book.image = "";
+      }
+  })
 
   return json(
     { books },
@@ -90,6 +120,9 @@ export default function Library() {
   const { books } = useLoaderData<typeof loader>();
   const [searchItem, setSearchItem] = useState("");
   const [filteredBooks, setFilteredBooks] = useState(books);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleInputChange = (e: { target: { value: any } }) => {
     const searchTerm = e.target.value;
@@ -171,11 +204,28 @@ export default function Library() {
             color: "#fff",
           }}
           variant="contained"
-          component={Link}
-          to="/BookUploadBook"
+          onClick={handleOpen}
         >
           Upload a book
         </Button>
+        <Modal open={open} onClose={handleClose}>
+          <Box
+            sx={{
+              position: 'absolute' as 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: 400,
+              boxShadow: 24,
+              p: 4,}}>
+              <Form action={"/library/"} method="post" encType="multipart/form-data">
+                <TextField name="file" type="file"></TextField>
+                <Button type="submit">
+                  Upload
+                </Button>
+              </Form>
+          </Box>
+        </Modal>
       </Box>
 
       <Box

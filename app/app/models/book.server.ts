@@ -12,7 +12,7 @@ export async function getUserLibrary(userId: User["id"]) {
   return prisma.book.findMany({ where: { userId } });
 }
 
-export async function createBook(values: Book) {
+export async function createBook(values: {title: string, author: string, genre: string, description: string, file: Buffer, image: Buffer | null, user: {connect: {id: string}}}) {
   return prisma.book.create({
     data: values,
   });

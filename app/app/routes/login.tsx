@@ -67,7 +67,7 @@ export async function action({ request }: ActionFunctionArgs) {
   session.set("userId", userId);
 
   // Login succeeded, send them to the home page.
-  return redirect("/dashboard/".concat(userId), {
+  return redirect("/dashboard", {
     headers: {
       "Set-Cookie": await commitSession(session),
     },
@@ -77,11 +77,6 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Login() {
   const { error } = useLoaderData<typeof loader>();
   const submit = useSubmit();
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    submit(event.currentTarget, { replace: true });
-  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -97,7 +92,7 @@ export default function Login() {
           Welcome to LitCritters
         </Typography>
 
-        <Form onSubmit={handleSubmit}>
+        <Form action="/login" method="post">
           <TextField
             margin="normal"
             required
