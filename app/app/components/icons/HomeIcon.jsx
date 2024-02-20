@@ -1,4 +1,4 @@
-const HomeIcon = (props) => (
+export const HomeIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={800}
@@ -14,4 +14,3 @@ const HomeIcon = (props) => (
     />
   </svg>
 );
-export default HomeIcon;

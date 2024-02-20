@@ -1,52 +1,20 @@
-import * as React from "react";
-import { useState } from "react";
-import { Link, useLoaderData } from "@remix-run/react";
-import {
-  Button,
-  Typography,
-  Box,
-  Container,
-  InputBase,
-  AppBar,
-  styled,
-  Grid,
-  Paper,
-} from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
+import {
+  AppBar,
+  Box,
+  Button,
+  Grid,
+  InputBase,
+  Paper,
+  Typography,
+  styled,
+} from "@mui/material";
+import { LoaderFunction } from "@remix-run/node";
+import { Link, useLoaderData } from "@remix-run/react";
+import { useState } from "react";
 
-import { getSession, commitSession } from "../sessions";
-import { LoaderFunctionArgs, json, redirect } from "@remix-run/node";
-import { getUserLibrary } from "~/models/book.server";
-
-export async function loader({ request }: LoaderFunctionArgs) {
-  const session = await getSession(request.headers.get("Cookie"));
-
-  let userId;
-
-  // check if correct user
-  if (session.has("userId")) {
-    userId = session.get("userId");
-    let urlUserId = request.url.split("/").pop();
-
-    if (urlUserId != userId) {
-      return redirect("/login");
-    }
-  } else {
-    return redirect("/login");
-  }
-
-  // get books
-  let books = userId != undefined ? await getUserLibrary(userId) : [];
-
-  return json(
-    { books },
-    {
-      headers: {
-        "Set-Cookie": await commitSession(session),
-      },
-    },
-  );
-}
+import { AuthenticatedLayout } from "~/components";
+import { authenticator } from "~/utils/auth.server";
 
 const BookCard = styled(Paper)(({ theme }) => ({
   backgroundColor: "#808080",
@@ -105,12 +73,7 @@ export default function Library() {
   };
 
   return (
-    <Container
-      maxWidth={false}
-      sx={{
-        padding: 0,
-      }}
-    >
+    <AuthenticatedLayout>
       <AppBar position="static" elevation={0}>
         <Box
           sx={{
@@ -127,10 +90,7 @@ export default function Library() {
           >
             <Typography
               variant="h4"
-              fontWeight="bold"
               style={{ wordWrap: "break-word" }}
-              component="div"
-              display="block"
               color="#0c174b"
               padding="30px 0px 0px 0px"
             >
@@ -140,7 +100,7 @@ export default function Library() {
 
           <Box
             sx={{
-              padding: "15px 30px 15px 30px",
+              padding: "15px 30px",
             }}
           >
             <Search>
@@ -202,7 +162,7 @@ export default function Library() {
                     backgroundRepeat: "no-repeat",
                     backgroundSize: 155,
                   }}
-                ></BookCard>
+                />
                 <Box
                   sx={{
                     width: 110,
@@ -231,6 +191,16 @@ export default function Library() {
           </Grid>
         </Grid>
       </Box>
-    </Container>
+    </AuthenticatedLayout>
   );
+}
+
+// detect if user is logged in
+export const loader: LoaderFunction = async ({ request }) => {
+  // if the user is authenticated, redirect to /dashboard
+  await authenticator.isAuthenticated(request, {
+    failureRedirect: "/",
+  });
+
+  return {};
 }

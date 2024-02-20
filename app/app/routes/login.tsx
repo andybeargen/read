@@ -1,87 +1,61 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Form, useLoaderData, useSubmit } from "@remix-run/react";
+import type {
+  ActionFunction,
+  LoaderFunction
+} from "@remix-run/node";
+import { json } from "@remix-run/node";
+import { Form, useLoaderData } from "@remix-run/react";
 
-import { getSession, commitSession } from "../sessions";
-import { loginUser } from "~/models/user.server";
+import { commitSession, getSession } from "~/utils/sessions.server";
+import { authenticator } from "~/utils/auth.server";
 
 import {
-  Button,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Link,
-  Grid,
   Box,
-  Typography,
+  Button,
+  Checkbox,
   Container,
+  FormControlLabel,
+  Grid,
+  Link,
+  TextField,
+  Typography,
 } from "@mui/material";
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const session = await getSession(request.headers.get("Cookie"));
-
-  if (session.has("userId")) {
-    const userId = session.get("userId");
-    if (userId != undefined) {
-      return redirect("/dashboard/".concat(userId));
-    }
-  }
-
-  const data = { error: session.get("error") };
-
-  return json(data, {
-    headers: {
-      "Set-Cookie": await commitSession(session),
-    },
+/**
+ * Called when the user visits the login page
+ */
+export const loader: LoaderFunction = async ({ request }) => {
+  // if the user is authenticated, redirect to /dashboard
+  await authenticator.isAuthenticated(request, {
+    successRedirect: "/dashboard",
   });
-}
 
-export async function action({ request }: ActionFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
-  const form = await request.formData();
-  const email = form.get("email");
-  const password = form.get("password");
 
-  let userId = null;
-  let user;
-
-  if (email != null && password != null) {
-    user = await loginUser(email.toString(), password.toString());
-
-    if (user != null) {
-      userId = user.id;
-    }
-  }
-
-  if (userId == null) {
-    session.flash("error", "Invalid username/password");
-
-    // Redirect back to the login page with errors.
-    return redirect("/login", {
+  const error = session.get("error");
+  return json(
+    { error },
+    {
       headers: {
         "Set-Cookie": await commitSession(session),
       },
-    });
-  }
-
-  session.set("userId", userId);
-
-  // Login succeeded, send them to the home page.
-  return redirect("/dashboard/".concat(userId), {
-    headers: {
-      "Set-Cookie": await commitSession(session),
     },
+  );
+};
+
+/**
+ * Called when the user submits the login form
+ */
+export const action: ActionFunction = async ({ request, context }) => {
+  return await authenticator.authenticate("email-pass", request, {
+    successRedirect: "/dashboard",
+    failureRedirect: "/login",
+    throwOnError: true,
+    context,
   });
-}
+};
 
 export default function Login() {
-  const { error } = useLoaderData<typeof loader>();
-  const submit = useSubmit();
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    submit(event.currentTarget, { replace: true });
-  };
+  const loaderData = useLoaderData<typeof loader>();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -97,7 +71,9 @@ export default function Login() {
           Welcome to LitCritters
         </Typography>
 
-        <Form onSubmit={handleSubmit}>
+        {loaderData?.error ? <p>ERROR: {loaderData?.error?.message}</p> : null}
+
+        <Form action="/login" method="post">
           <TextField
             margin="normal"
             required
@@ -136,7 +112,7 @@ export default function Login() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/register" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
