@@ -31,12 +31,9 @@ export async function action({ request }: ActionFunctionArgs) {
   let user;
 
   if (email && password && username) {
-    console.log("Before");
     user = await createUser(String(username), String(email), String(password));
-    console.log("After");
     if (user) {
       userId = user.id;
-      console.log(user);
     }
   }
 
@@ -54,7 +51,7 @@ export async function action({ request }: ActionFunctionArgs) {
   session.set("userId", userId);
 
   // Login succeeded, send them to the home page.
-  return redirect("/dashboard/".concat(userId), {
+  return redirect("/dashboard/", {
     headers: {
       "Set-Cookie": await commitSession(session),
     },
