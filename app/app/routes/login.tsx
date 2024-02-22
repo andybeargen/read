@@ -23,7 +23,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (session.has("userId")) {
     const userId = session.get("userId");
     if (userId != undefined) {
-      return redirect("/dashboard/".concat(userId));
+      return redirect("/dashboard/");
     }
   }
 
