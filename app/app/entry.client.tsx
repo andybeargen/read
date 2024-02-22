@@ -10,7 +10,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { RemixBrowser } from "@remix-run/react";
 import { startTransition, StrictMode, useState } from "react";
 import ClientStyleContext from "~/contexts/ClientStyleContext";
-import { CrittersTheme } from "./utils/theme";
+import { CrittersTheme } from "./utils/theme.client";
 import createEmotionCache from "@emotion/cache";
 import { hydrateRoot } from "react-dom/client";
 
@@ -36,14 +36,14 @@ function ClientCacheProvider({ children }: ClientCacheProviderProps) {
 startTransition(() => {
   hydrateRoot(
     document,
-    <ClientCacheProvider>
-      <StrictMode>
+    <StrictMode>
+      <ClientCacheProvider>
         <ThemeProvider theme={CrittersTheme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
           <RemixBrowser />
         </ThemeProvider>
-      </StrictMode>
-    </ClientCacheProvider>,
+      </ClientCacheProvider>
+    </StrictMode>
   );
 });

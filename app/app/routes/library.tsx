@@ -14,10 +14,11 @@ import {
   Modal,
   TextField,
 } from "@mui/material";
-import { Search as SearchIcon } from "@mui/icons-material";
-import { CloudUpload } from "@mui/icons-material";
-
-import { getSession, commitSession } from "../sessions";
+import { LoaderFunction } from "@remix-run/node";
+import { AuthenticatedLayout } from "~/components";
+import { authenticator } from "~/utils/auth.server";
+import { Search as SearchIcon, CloudUpload } from "@mui/icons-material";
+import { getSession, commitSession } from "../utils/sessions.server";
 import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from "@remix-run/node";
 import { createBook, getUserLibrary } from "~/models/book.server";
 import { parseEpub } from "~/utils/epub";
@@ -45,38 +46,6 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return {};
-}
-
-export async function loader({ request }: LoaderFunctionArgs) {
-  const session = await getSession(request.headers.get("Cookie"));
-
-  let userId;
-
-  // check if correct user
-  if (session.has("userId")) {
-    userId = session.get("userId");
-  } else {
-    return redirect("/login");
-  }
-
-  // get books
-  let books: any = userId != undefined ? await getUserLibrary(userId) : [];
-  books.forEach((book: any) => {
-      if (book.image) {
-        book.image = "data:image/jpeg;base64," + book.image.toString('base64');
-      } else {
-        book.image = "";
-      }
-  })
-
-  return json(
-    { books },
-    {
-      headers: {
-        "Set-Cookie": await commitSession(session),
-      },
-    },
-  );
 }
 
 const BookCard = styled(Paper)(({ theme }) => ({
@@ -153,12 +122,7 @@ export default function Library() {
   };
 
   return (
-    <Container
-      maxWidth={false}
-      sx={{
-        padding: 0,
-      }}
-    >
+    <AuthenticatedLayout>
       <AppBar position="static" elevation={0}>
         <Box
           sx={{
@@ -175,10 +139,7 @@ export default function Library() {
           >
             <Typography
               variant="h4"
-              fontWeight="bold"
               style={{ wordWrap: "break-word" }}
-              component="div"
-              display="block"
               color="#0c174b"
               padding="30px 0px 0px 0px"
             >
@@ -188,7 +149,7 @@ export default function Library() {
 
           <Box
             sx={{
-              padding: "15px 30px 15px 30px",
+              padding: "15px 30px",
             }}
           >
             <Search>
@@ -287,7 +248,7 @@ export default function Library() {
                     backgroundRepeat: "no-repeat",
                     backgroundSize: 155,
                   }}
-                ></BookCard>
+                />
                 <Box
                   sx={{
                     width: 110,
@@ -316,6 +277,32 @@ export default function Library() {
           </Grid>
         </Grid>
       </Box>
-    </Container>
+    </AuthenticatedLayout>
   );
+}
+
+// detect if user is logged in
+export const loader: LoaderFunction = async ({ request }) => {
+  // if the user is authenticated, redirect to /dashboard
+  let user = await authenticator.isAuthenticated(request, {
+    failureRedirect: "/",
+  });
+
+  if (!user || user instanceof Error) {
+    return {};
+  } else {
+    // get books
+    let books: any = user.id != undefined ? await getUserLibrary(user.id) : [];
+    books.forEach((book: any) => {
+        if (book.image) {
+          book.image = "data:image/jpeg;base64," + book.image.toString('base64');
+        } else {
+          book.image = "";
+        }
+    })
+
+    return json(
+      { books }
+    );
+  }
 }
