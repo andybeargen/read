@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { Form, Link, useLoaderData } from "@remix-run/react";
+import { Form, Link, useLoaderData, useSubmit } from "@remix-run/react";
 import {
   Button,
   Typography,
@@ -15,6 +15,7 @@ import {
   TextField,
 } from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
+import { CloudUpload } from "@mui/icons-material";
 
 import { getSession, commitSession } from "../sessions";
 import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from "@remix-run/node";
@@ -116,6 +117,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
 export default function Library() {
   const { books } = useLoaderData<typeof loader>();
   const [searchItem, setSearchItem] = useState("");
@@ -123,6 +136,8 @@ export default function Library() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const submit = useSubmit();
 
   const handleInputChange = (e: { target: { value: any } }) => {
     const searchTerm = e.target.value;
@@ -197,6 +212,7 @@ export default function Library() {
           alignItems: "right",
         }}
       >
+      {/*
         <Button
           sx={{
             borderRadius: 10,
@@ -215,9 +231,11 @@ export default function Library() {
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              width: 400,
+              height: '50%',
+              aspectRatio: '1/1',
               boxShadow: 24,
-              p: 4,}}>
+              p: 4,
+              zIndex: 999999}}>
               <Form action={"/library/"} method="post" encType="multipart/form-data">
                 <TextField name="file" type="file"></TextField>
                 <Button type="submit">
@@ -226,8 +244,25 @@ export default function Library() {
               </Form>
           </Box>
         </Modal>
-      </Box>
+        */}
 
+        <Form onChange={(event) => {
+          submit(event.currentTarget)
+          }} 
+          action="/library" method="post" encType="multipart/form-data">
+          <Button
+            component="label"
+            role={undefined}
+            variant="contained"
+            tabIndex={-1}
+            startIcon={<CloudUpload />}
+          >
+            Upload Book
+            <VisuallyHiddenInput name="file" type="file" accept=".epub"/>
+          </Button>
+        </Form>
+      </Box>
+        
       <Box
         sx={{
           flexGrow: 1,
