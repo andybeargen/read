@@ -24,24 +24,18 @@ import { createBook, getUserLibrary } from "~/models/book.server";
 import { parseEpub } from "~/utils/epub";
 
 export async function action({ request }: ActionFunctionArgs) {
-  const session = await getSession(
-    request.headers.get("Cookie")
-  );
-
-  let userId;
-
-  if (session.has("userId")) {
-    userId = session.get("userId");
-  } else {
-    return redirect("/login");
-  }
+  let user = await authenticator.isAuthenticated(request, {
+    failureRedirect: "/",
+  });
 
   let body = await request.formData();
   let epubFile = body.get("file") as File;
 
-  if (epubFile) {
+  if (!user || user instanceof Error) {
+    return {};
+  } else if (epubFile) {
     let epubInfo = await parseEpub(epubFile);
-    let bookData = {...epubInfo, user: {connect: {id: userId as string}}};
+    let bookData = {...epubInfo, user: {connect: {id: user.id as string}}};
     let book = await createBook(bookData);
   }
 
@@ -101,25 +95,20 @@ const VisuallyHiddenInput = styled('input')({
 export default function Library() {
   const { books } = useLoaderData<typeof loader>();
   const [searchItem, setSearchItem] = useState("");
-  const [filteredBooks, setFilteredBooks] = useState(books);
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   const submit = useSubmit();
 
   const handleInputChange = (e: { target: { value: any } }) => {
     const searchTerm = e.target.value;
     setSearchItem(searchTerm);
-
-    const filteredItems = books.filter(
-      (book) =>
-        book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        book.author.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-
-    setFilteredBooks(filteredItems);
   };
+
+  const getFilteredBooks = (books: any) => {
+    return books.filter((book: any) => 
+      book.title.toLowerCase().includes(searchItem.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchItem.toLowerCase()));
+  }
 
   return (
     <AuthenticatedLayout>
@@ -173,40 +162,6 @@ export default function Library() {
           alignItems: "right",
         }}
       >
-      {/*
-        <Button
-          sx={{
-            borderRadius: 10,
-            bgcolor: "#0c174b",
-            color: "#fff",
-          }}
-          variant="contained"
-          onClick={handleOpen}
-        >
-          Upload a book
-        </Button>
-        <Modal open={open} onClose={handleClose}>
-          <Box
-            sx={{
-              position: 'absolute' as 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              height: '50%',
-              aspectRatio: '1/1',
-              boxShadow: 24,
-              p: 4,
-              zIndex: 999999}}>
-              <Form action={"/library/"} method="post" encType="multipart/form-data">
-                <TextField name="file" type="file"></TextField>
-                <Button type="submit">
-                  Upload
-                </Button>
-              </Form>
-          </Box>
-        </Modal>
-        */}
-
         <Form onChange={(event) => {
           submit(event.currentTarget)
           }} 
@@ -236,7 +191,7 @@ export default function Library() {
           columnSpacing={{ xs: 1, sm: 2, md: 3 }}
         >
           <Grid container justifyContent="center" spacing={4}>
-            {filteredBooks.map((book) => (
+            {getFilteredBooks(books).map((book) => (
               <Grid key={book.id} item>
                 <BookCard
                   sx={{
