@@ -28,4 +28,9 @@ export default defineConfig({
       warn(warning)
     }}
   },
+
+  // change dev server port
+  server: {
+    port: 3000,
+  },
 });
