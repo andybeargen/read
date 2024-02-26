@@ -14,7 +14,6 @@ export async function createCritter(
   description: Critter["description"],
   type: Critter["type"]
 ) {
-
   const critterExists = await prisma.critter.findUnique({
     where: {
       name: name,
@@ -39,8 +38,6 @@ export async function updateCritter(
   description: Critter["description"],
   type: Critter["type"]
 ) {
-  console.log("Update Critter");
-
   return prisma.critter.update({
     where: {
       id: id,
