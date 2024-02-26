@@ -30,6 +30,11 @@ export async function action({ request }: ActionFunctionArgs) {
 
   let body = await request.formData();
   let epubFile = body.get("file") as File;
+  
+  // reject an epub of over 100mb
+  if (epubFile.size > 100000000) {
+    return {};
+  }
 
   if (!user || user instanceof Error) {
     return {};
