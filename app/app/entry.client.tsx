@@ -44,6 +44,6 @@ startTransition(() => {
           <RemixBrowser />
         </ThemeProvider>
       </ClientCacheProvider>
-    </StrictMode>
+    </StrictMode>,
   );
 });

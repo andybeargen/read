@@ -8,7 +8,7 @@ import {
   SettingsIcon,
 } from "~/components";
 import { authenticator } from "~/utils/auth.server";
-import { User } from '@prisma/client';
+import { User } from "@prisma/client";
 
 const CoinCount = ({ count }: { count: number }) => {
   return (
@@ -105,7 +105,7 @@ export default function Dashboard() {
             }}
           >
             <img
-              src="/Uncommon_Squirtle.gif"
+              src="/critters/Uncommon_Squirtle.gif"
               alt="critter"
               style={{ width: "200px" }}
             />
@@ -165,4 +165,4 @@ export const loader: LoaderFunction = async ({ request }) => {
   return await authenticator.isAuthenticated(request, {
     failureRedirect: "/",
   });
-}
+};

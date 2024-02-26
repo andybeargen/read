@@ -18,7 +18,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   });
 
   return {};
-}
+};
 
 export default function Index() {
   return (

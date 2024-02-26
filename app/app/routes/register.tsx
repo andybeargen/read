@@ -1,9 +1,5 @@
 import { Typography } from "@mui/material";
-import {
-  ActionFunctionArgs,
-  LoaderFunction,
-  json
-} from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunction, json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { authenticator } from "~/utils/auth.server";
 import { commitSession, getSession } from "~/utils/sessions.server";
@@ -32,7 +28,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     successRedirect: "/dashboard",
     failureRedirect: "/register",
     throwOnError: true,
-    context
+    context,
   });
 }
 
