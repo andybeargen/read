@@ -4,15 +4,7 @@ import { prisma } from "~/db.server";
 
 export type { Book } from "@prisma/client";
 
-export type BookCreationData = {
-    title: string,
-    author: string,
-    genre: string,
-    description: string,
-    file: Buffer,
-    image: Buffer | null,
-    user: {connect: {id: string}}
-};
+export type BookCreationData = Omit<Book, "userId" | "id"> & {user: {connect: {id: string}}};
 
 export async function getBookById(id: Book["id"]) {
   return prisma.book.findUnique({ where: { id } });
