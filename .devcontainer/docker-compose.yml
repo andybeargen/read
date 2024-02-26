@@ -34,4 +34,4 @@ services:
       - REMIX_DEV_SERVER_WS_PORT=8082
 
     # Overrides default command so things don't shut down after the process ends.
-    # command: /bin/sh -c "while sleep 1000; do :; done"
+    command: /bin/sh -c "while sleep 1000; do :; done"
