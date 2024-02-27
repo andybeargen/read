@@ -23,23 +23,21 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export default function Index() {
-
   return (
+    <Box className="index-page-box" display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="100vh">
+      <Container className="indexx" style={{
+        height: '50vh', // full viewport height
+        display: 'flex',
+        alignItems: 'center', // vertical alignment
+        justifyContent: 'center', // horizontal alignment
+      }}>
+        <img
+          src="/pikachuonbooks.png"
+          alt="critter"
+          style={{ maxWidth: '100%', maxHeight: '100%' }} // to ensure the image is responsive and does not overflow
+        />
+      </Container>
 
-    <><Container style={{
-      height: '50vh', // full viewport height
-      display: 'flex',
-      alignItems: 'center', // vertical alignment
-      justifyContent: 'center', // horizontal alignment
-    }}>
-      <img
-        src="/pikachuonbooks.png"
-        alt="critter"
-        style={{ maxWidth: '100%', maxHeight: '100%' }} // to ensure the image is responsive and does not overflow
-      />
-    </Container><>
-    
-    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
       <Typography component="h1" variant="h1" textAlign="center">
         Lit Critters
       </Typography>
@@ -63,8 +61,5 @@ export default function Index() {
         </Link>
       </Box>
     </Box>
-          
-    </></>
   );
 }
-
