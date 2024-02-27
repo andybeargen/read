@@ -1,20 +1,51 @@
-import { Search as SearchIcon } from "@mui/icons-material";
+import * as React from "react";
+import { useState } from "react";
+import { Form, Link, useLoaderData, useSubmit } from "@remix-run/react";
 import {
-  AppBar,
-  Box,
   Button,
-  Grid,
-  InputBase,
-  Paper,
   Typography,
+  Box,
+  Container,
+  InputBase,
+  AppBar,
   styled,
+  Grid,
+  Paper,
+  Modal,
+  TextField,
 } from "@mui/material";
 import { LoaderFunction } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
-import { useState } from "react";
-
 import { AuthenticatedLayout } from "~/components";
 import { authenticator } from "~/utils/auth.server";
+import { Search as SearchIcon, CloudUpload } from "@mui/icons-material";
+import { getSession, commitSession } from "../utils/sessions.server";
+import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from "@remix-run/node";
+import { createBook, getUserLibrary } from "~/models/book.server";
+import { parseEpub } from "~/utils/epub";
+
+export async function action({ request }: ActionFunctionArgs) {
+  let user = await authenticator.isAuthenticated(request, {
+    failureRedirect: "/",
+  });
+
+  let body = await request.formData();
+  let epubFile = body.get("file") as File;
+  
+  // reject an epub of over 100mb
+  if (epubFile.size > 100000000) {
+    return {};
+  }
+
+  if (!user || user instanceof Error) {
+    return {};
+  } else if (epubFile) {
+    let epubInfo = await parseEpub(epubFile);
+    let bookData = {...epubInfo, user: {connect: {id: user.id as string}}};
+    let book = await createBook(bookData);
+  }
+
+  return {};
+}
 
 const BookCard = styled(Paper)(({ theme }) => ({
   backgroundColor: "#808080",
@@ -54,23 +85,35 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
 export default function Library() {
   const { books } = useLoaderData<typeof loader>();
   const [searchItem, setSearchItem] = useState("");
-  const [filteredBooks, setFilteredBooks] = useState(books);
+  const [open, setOpen] = useState(false);
+
+  const submit = useSubmit();
 
   const handleInputChange = (e: { target: { value: any } }) => {
     const searchTerm = e.target.value;
     setSearchItem(searchTerm);
-
-    const filteredItems = books.filter(
-      (book) =>
-        book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        book.author.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-
-    setFilteredBooks(filteredItems);
   };
+
+  const getFilteredBooks = (books: any) => {
+    return books.filter((book: any) => 
+      book.title.toLowerCase().includes(searchItem.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchItem.toLowerCase()));
+  }
 
   return (
     <AuthenticatedLayout>
@@ -124,20 +167,23 @@ export default function Library() {
           alignItems: "right",
         }}
       >
-        <Button
-          sx={{
-            borderRadius: 10,
-            bgcolor: "#0c174b",
-            color: "#fff",
-          }}
-          variant="contained"
-          component={Link}
-          to="/BookUploadBook"
-        >
-          Upload a book
-        </Button>
+        <Form onChange={(event) => {
+          submit(event.currentTarget)
+          }} 
+          action="/library" method="post" encType="multipart/form-data">
+          <Button
+            component="label"
+            role={undefined}
+            variant="contained"
+            tabIndex={-1}
+            startIcon={<CloudUpload />}
+          >
+            Upload Book
+            <VisuallyHiddenInput name="file" type="file" accept=".epub"/>
+          </Button>
+        </Form>
       </Box>
-
+        
       <Box
         sx={{
           flexGrow: 1,
@@ -150,7 +196,7 @@ export default function Library() {
           columnSpacing={{ xs: 1, sm: 2, md: 3 }}
         >
           <Grid container justifyContent="center" spacing={4}>
-            {filteredBooks.map((book) => (
+            {getFilteredBooks(books).map((book) => (
               <Grid key={book.id} item>
                 <BookCard
                   sx={{
@@ -198,9 +244,25 @@ export default function Library() {
 // detect if user is logged in
 export const loader: LoaderFunction = async ({ request }) => {
   // if the user is authenticated, redirect to /dashboard
-  await authenticator.isAuthenticated(request, {
+  let user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/",
   });
 
-  return {};
+  if (!user || user instanceof Error) {
+    return {};
+  } else {
+    // get books
+    let books: any = user.id != undefined ? await getUserLibrary(user.id) : [];
+    books.forEach((book: any) => {
+        if (book.image) {
+          book.image = "data:image/jpeg;base64," + book.image.toString('base64');
+        } else {
+          book.image = "";
+        }
+    })
+
+    return json(
+      { books }
+    );
+  }
 }
