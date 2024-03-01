@@ -30,4 +30,23 @@ model User {
   coins                      Int                 @default(0)
   books                      Book[]
   dateCreated                DateTime            @default(now())
+  UserCritter                UserCritter[]
+}
+
+model Critter {
+  id          String @id @default(uuid()) @map("_id")
+  name        String @unique
+  description String
+  type        String
+  UserCritter UserCritter[]
+}
+
+model UserCritter {
+  id        String @id @default(uuid()) @map("_id")
+  level     Int @default(1)
+  xp        Int @default(0)
+  userId    String
+  critterId String
+  user      User @relation(fields: [userId], references: [id])
+  critter   Critter @relation(fields: [critterId], references: [id])
 }
