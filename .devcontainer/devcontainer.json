@@ -22,7 +22,7 @@
 	// "features": {},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [3000, 8002],
+	"forwardPorts": [3000],
 
 	// Uncomment the next line if you want start specific services in your Docker Compose config.
 	// "runServices": [],
@@ -31,7 +31,7 @@
 	"shutdownAction": "stopCompose",
 
 	// Uncomment the next line to run commands after the container is created.
-	"postCreateCommand": "npm run prisma:migrate"
+	"postCreateCommand": "npm run prisma:migrate; npx remix vite:dev --host"
 
 	// Configure tool-specific properties.
 	// "customizations": {},

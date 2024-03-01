@@ -10,5 +10,4 @@ COPY ./ ./
 
 RUN npm run prisma:generate
 
-CMD ["./node_modules/.bin/remix", "dev"]
-# CMD ["/bin/sh", "docker-entrypoint-dev.sh"]
+CMD ["./node_modules/.bin/remix", "vite:dev"]

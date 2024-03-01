@@ -29,17 +29,14 @@ authenticator.use(
     const email = form.get("email");
     const password = form.get("password");
 
-    if (!email)
-      throw new AuthorizationError("Email is required");
+    if (!email) throw new AuthorizationError("Email is required");
 
-    if (!password)
-      throw new AuthorizationError("Password is required");
+    if (!password) throw new AuthorizationError("Password is required");
 
     if (typeof email !== "string" || typeof password !== "string")
       throw new AuthorizationError("Invalid email/password");
 
-    if (!email.includes("@"))
-      throw new AuthorizationError("Invalid email");
+    if (!email.includes("@")) throw new AuthorizationError("Invalid email");
 
     // fetch the user from the database
     const user = await loginUser(email.toString(), password.toString());
@@ -63,23 +60,27 @@ authenticator.use(
     const password = form.get("password");
     const username = form.get("username");
 
-    if (!email)
-      throw new AuthorizationError("Email is required");
+    if (!email) throw new AuthorizationError("Email is required");
 
-    if (!password)
-      throw new AuthorizationError("Password is required");
+    if (!password) throw new AuthorizationError("Password is required");
 
-    if (!username)
-      throw new AuthorizationError("Username is required");
+    if (!username) throw new AuthorizationError("Username is required");
 
-    if (typeof email !== "string" || typeof password !== "string" || typeof username !== "string")
+    if (
+      typeof email !== "string" ||
+      typeof password !== "string" ||
+      typeof username !== "string"
+    )
       throw new AuthorizationError("Invalid email/password/username");
 
-    if (!email.includes("@"))
-      throw new AuthorizationError("Invalid email");
+    if (!email.includes("@")) throw new AuthorizationError("Invalid email");
 
     // fetch the user from the database
-    const user = await createUser(username.toString(), email.toString(), password.toString());
+    const user = await createUser(
+      username.toString(),
+      email.toString(),
+      password.toString(),
+    );
 
     if (user instanceof Error)
       throw new AuthorizationError("User already exists");
