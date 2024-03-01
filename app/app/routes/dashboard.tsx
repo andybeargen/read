@@ -1,5 +1,5 @@
 import { Box, Container, IconButton, Typography } from "@mui/material";
-import { LoaderFunction } from "@remix-run/node";
+import { LoaderFunction, redirect } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import {
   AuthenticatedLayout,
@@ -9,6 +9,7 @@ import {
 } from "~/components";
 import { authenticator } from "~/utils/auth.server";
 import { User } from "@prisma/client";
+import { prisma } from "~/db.server";
 
 const CoinCount = ({ count }: { count: number }) => {
   return (
@@ -37,6 +38,7 @@ const CoinCount = ({ count }: { count: number }) => {
 
 export default function Dashboard() {
   const user: User = useLoaderData<typeof loader>();
+  const mainCritter = user.UserCritter;
 
   return (
     <AuthenticatedLayout>
@@ -105,7 +107,7 @@ export default function Dashboard() {
             }}
           >
             <img
-              src="/critters/Uncommon_Squirtle.gif"
+              src={`/${mainCritter.name}.gif`}
               alt="critter"
               style={{ width: "200px" }}
             />
@@ -118,7 +120,7 @@ export default function Dashboard() {
               position={"absolute"}
               top={"51vh"}
             >
-              Squirtle
+              {mainCritter.name}
             </Typography>
           </Container>
 
@@ -162,7 +164,28 @@ export default function Dashboard() {
 // detect if user is logged in
 export const loader: LoaderFunction = async ({ request }) => {
   // if the user is authenticated, redirect to /dashboard
-  return await authenticator.isAuthenticated(request, {
+  const user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/",
   });
+  if (user instanceof Error || !user) {
+    redirect("/");
+    return null;
+  }
+  const userData = await prisma.user.findUnique({
+    where: {
+      id: user.id,
+    },
+    include: {
+      UserCritter: true,
+    },
+  });
+  if (!userData || userData instanceof Error) {
+    redirect("/");
+    return null;
+  }
+  const critterId = userData.UserCritter[0].critterId;
+  userData.UserCritter = await prisma.critter.findUnique({
+    where: { id: critterId },
+  });
+  return userData;
 };
