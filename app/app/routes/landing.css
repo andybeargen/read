@@ -1,0 +1,6 @@
+.index-page-box {
+    /* This will only target a body element within your .landing-page-container, if such an element exists */
+    background: linear-gradient(to bottom, #fc9850, #e5e9dc);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
