@@ -2,8 +2,6 @@ import { Box, Container, Typography, Button } from "@mui/material";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import { authenticator } from "~/utils/auth.server";
-import './landing.css'; // The css file for the landing page
-
 
 export const meta: MetaFunction = () => {
   return [
@@ -24,8 +22,17 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Index() {
   return (
-    <Box className="index-page-box" display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="100vh">
-      <Container className="indexx" style={{
+    <Box className="index-page-box" sx={{
+      backgroundImage: 'linear-gradient(to bottom, #fc9850, #e5e9dc)',
+      backgroundRepeat: 'no-repeat',
+      backgroundAttachment: 'fixed',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '100vh',
+    }}>
+      <Container sx={{
         height: '50vh', // full viewport height
         display: 'flex',
         alignItems: 'center', // vertical alignment
@@ -33,7 +40,7 @@ export default function Index() {
       }}>
         <img
           src="/pikachuonbooks.png"
-          alt="critter"
+          alt="A critter stasnds on top of a pile of books."
           style={{ maxWidth: '100%', maxHeight: '100%' }} // to ensure the image is responsive and does not overflow
         />
       </Container>
@@ -43,22 +50,21 @@ export default function Index() {
       </Typography>
 
       <Typography component="h5" variant="h5" textAlign="center">
-        Where reading lit books gets you the Littist of Critters. 
-        Just upload a pdf/epub and read away!
+        Where reading lit books gets you the Littist of Critters.
+        Just upload a epub and read away!
       </Typography>
 
-      <Box mt={3} mb={2}>
-        <Link to="/login" style={{ textDecoration: 'none', margin: '10px' }}>
-          <Button variant="contained">
-            Login
-          </Button>
-        </Link>
+      <Box mt={3} mb={2} sx={{
+        display: 'flex',
+        gap: '2rem',
+      }}>
+        <Button variant="contained" component={Link} to="/login">
+          Login
+        </Button>
 
-        <Link to="/register" style={{ textDecoration: 'none', margin: '10px' }}>
-          <Button variant="contained">
-            Register
-          </Button>
-        </Link>
+        <Button variant="contained" component={Link} to="/register">
+          Register
+        </Button>
       </Box>
     </Box>
   );
