@@ -1,85 +1,60 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from "@remix-run/node"
-import { createUser } from "~/models/user.server"
-import { Form, Link, useLoaderData } from "@remix-run/react"
-import { commitSession, getSession } from "~/sessions";
+import { Typography } from "@mui/material";
+import { ActionFunctionArgs, LoaderFunction, json } from "@remix-run/node";
+import { Form, useLoaderData } from "@remix-run/react";
+import { authenticator } from "~/utils/auth.server";
+import { commitSession, getSession } from "~/utils/sessions.server";
 
-export async function loader({request,}: LoaderFunctionArgs) {
-    const session = await getSession(
-        request.headers.get("Cookie")
-    );
+export const loader: LoaderFunction = async ({ request }) => {
+  // if the user is authenticated, redirect to /dashboard
+  await authenticator.isAuthenticated(request, {
+    successRedirect: "/dashboard",
+  });
 
-    const data = { error: session.get("error") };
+  const session = await getSession(request.headers.get("Cookie"));
 
-    return json(data, {
-        headers: {
+  const error = session.get("error");
+  return json(
+    { error },
+    {
+      headers: {
         "Set-Cookie": await commitSession(session),
-        },
-    });
-}
+      },
+    },
+  );
+};
 
-export async function action({request,}: ActionFunctionArgs) {
-    const session = await getSession(
-        request.headers.get("Cookie")
-    );
-    const form = await request.formData();
-    const email = form.get("email");
-    const password = form.get("password");
-    const username = form.get("username");
-
-    let userId = null;
-    let user;
-
-    if (email && password && username) {
-        console.log("Before");
-        user = await createUser(String(username), String(email), String(password));   
-        console.log("After");
-        if (user) {
-            userId = user.id;
-            console.log(user);
-        }
-    }
-
-    if (userId == null) {
-        session.flash("error", "Invalid username/password");
-
-        // Redirect back to the login page with errors.
-        return redirect("/register", {
-        headers: {
-            "Set-Cookie": await commitSession(session),
-        },
-        });
-    }
-
-    session.set("userId", userId);
-
-    // Login succeeded, send them to the home page.
-    return redirect("/dashboard/".concat(userId), {
-        headers: {
-        "Set-Cookie": await commitSession(session),
-        },
-    });
+export async function action({ request, context }: ActionFunctionArgs) {
+  return await authenticator.authenticate("register", request, {
+    successRedirect: "/dashboard",
+    failureRedirect: "/register",
+    throwOnError: true,
+    context,
+  });
 }
 
 export default function Register() {
-    const { error } = useLoaderData<typeof loader>();
+  const loaderData = useLoaderData<typeof loader>();
 
-    return (
-        <>
-            <h1>Register</h1>
-            {error ? <div className="error">{error}</div> : null}
-            <Form method="post" action="/register">
-                <label>
-                    Username: <input type="text" name="username" />
-                </label>
-                <label>
-                    Email: <input type="email" name="email" />
-                </label>
-                <label>
-                    Password:{" "}
-                    <input type="password" name="password" />
-                </label>
-                <button type="submit">Register</button>
-            </Form>
-        </>
-    )
+  return (
+    <>
+      <Typography component="h1" variant="h1">
+        Register
+      </Typography>
+
+      {loaderData?.error ? <p>ERROR: {loaderData?.error?.message}</p> : null}
+
+      <Form method="post" action="/register">
+        <label>
+          Username: <input type="text" name="username" />
+        </label>
+        <label>
+          Email: <input type="email" name="email" />
+        </label>
+        <label>
+          Password: <input type="password" name="password" />
+        </label>
+        <button type="submit">Register</button>
+      </Form>
+    </>
+  );
 }

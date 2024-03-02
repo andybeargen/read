@@ -1,4 +1,4 @@
-const CoinIcon = (props) => (
+export const CoinIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"
@@ -90,5 +90,4 @@ const CoinIcon = (props) => (
       }}
     />
   </svg>
-)
-export default CoinIcon;
+);
