@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { Form, Link, useLoaderData, useSubmit } from "@remix-run/react";
+import { Form, Link, useActionData, useLoaderData, useSubmit } from "@remix-run/react";
 import {
   Button,
   Typography,
@@ -29,6 +29,10 @@ export async function action({ request }: ActionFunctionArgs) {
   });
 
   let body = await request.formData();
+  if (!body.has("file")) {
+    console.log("Cancel");
+    return {};
+  }
   let epubFile = body.get("file") as File;
   
   // reject an epub of over 100mb
@@ -39,9 +43,13 @@ export async function action({ request }: ActionFunctionArgs) {
   if (!user || user instanceof Error) {
     return {};
   } else if (epubFile) {
-    let epubInfo = await parseEpub(epubFile);
-    let bookData = {...epubInfo, user: {connect: {id: user.id as string}}};
-    let book = await createBook(bookData);
+    try {
+      let epubInfo = await parseEpub(epubFile);
+      let bookData = {...epubInfo, user: {connect: {id: user.id as string}}};
+      let book = await createBook(bookData);
+    } catch (e) {
+      return {};
+    }
   }
 
   return {};
