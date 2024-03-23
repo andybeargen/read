@@ -2,6 +2,8 @@ import type { Critter, UserCritter, User } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
+import critters from "../../critters.json";
+
 export type { Critter } from "@prisma/client";
 export type { UserCritter } from "@prisma/client";
 
@@ -68,4 +70,23 @@ export async function getUserCritters(userId: User["id"]) {
       userId,
     },
   });
+}
+
+export async function hatchCritter(userId: User["id"]): Promise<Critter | null> {
+  let critterName: Critter["name"] = getRandomCritter();
+  let critter: Critter | null = await prisma.critter.findUnique({
+    where: {
+      name: critterName,
+    }
+  });
+
+  if (critter) {
+    assignCritterToUser(userId, critter.id);
+  }
+  return critter;
+}
+
+export function getRandomCritter(): Critter["name"] {
+  let randIdx: number = Math.floor(Math.random() * critters.length);
+  return critters[randIdx].data.name;
 }
