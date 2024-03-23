@@ -1,7 +1,6 @@
 [
   {
     "data": {
-      "id": 1,
       "name": "Critter1",
       "description": "A guy",
       "type": "Water"
@@ -10,7 +9,6 @@
   },
   {
     "data": {
-      "id": 2,
       "name": "Critter2",
       "description": "A guy",
       "type": "Fire"
@@ -19,7 +17,6 @@
   },
   {
     "data": {
-      "id": 3,
       "name": "Critter3",
       "description": "A guy",
       "type": "Grass"
