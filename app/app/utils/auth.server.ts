@@ -7,7 +7,7 @@ import {
 import { User } from "@prisma/client";
 import { FormStrategy } from "remix-auth-form";
 import { createUser, loginUser } from "~/models/user.server";
-import { createCritter, assignCritterToUser } from "~/models/critter.server";
+import { createCritter, assignCritterToUser, getRandomCritter, hatchCritter } from "~/models/critter.server";
 
 // Create an instance of the authenticator, pass a generic with what
 // strategies will return and will store in the session
@@ -85,15 +85,9 @@ authenticator.use(
     if (user instanceof Error)
       throw new AuthorizationError("User already exists");
 
-    const critter = await createCritter("Water Turtle", "A turtle that can shoot blasts of water", "Water");
-
-    if (critter instanceof Error)
-      throw new AuthorizationError("Error creating critter");
-
-    console.log(critter);
-
     if (user) {
-      await assignCritterToUser(user.id, critter.id);
+      const critter = await hatchCritter(user.id);
+      console.log(critter);
     }
 
     // the type of this user must match the type you pass to the Authenticator
