@@ -96,6 +96,12 @@ export default function CollectionRoute() {
     setSearchItem(searchTerm);
   };
 
+  const getFilteredCritters = (critters: any) => {
+    return critters.filter((critter: any) => 
+      critters.name.toLowerCase().includes(searchItem.toLowerCase()) ||
+      critters.id.toLowerCase().includes(searchItem.toLowerCase()));
+  }
+
 
 
   return <AuthenticatedLayout>
@@ -187,10 +193,8 @@ export default function CollectionRoute() {
                     {critters.name}
                   </Typography>
                 </Box>
-
-
+      
   </AuthenticatedLayout>;
-
   
 }
 
@@ -206,11 +210,11 @@ export const loader: LoaderFunction = async ({ request }) => {
   } else {
     // get books
     let critters: any = user.id != undefined ? await getUserCritters(user.id) : [];
-    critters.forEach((book: any) => {
-        if (critters.image) {
-          critters.image = "data:image/jpeg;base64," + book.image.toString('base64');
+    critters.forEach((critter: any) => {
+        if (critter.image) {
+          critter.image = "data:image/jpeg;base64," + critter.image.toString('base64');
         } else {
-          critters.image = "";
+          critter.image = "";
         }
     })
 
@@ -219,6 +223,3 @@ export const loader: LoaderFunction = async ({ request }) => {
     );
   }
 }
-
-
-// look inside critter.server.ts in app/models 
