@@ -81,7 +81,7 @@ export async function hatchCritter(userId: User["id"]): Promise<Critter | null> 
   });
 
   if (critter) {
-    assignCritterToUser(userId, critter.id);
+    await assignCritterToUser(userId, critter.id);
   }
   return critter;
 }
