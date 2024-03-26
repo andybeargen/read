@@ -51,7 +51,6 @@ export async function action({ request }: ActionFunctionArgs) {
       return {};
     }
   }
-
   return {};
 }
 
@@ -207,15 +206,17 @@ export default function Library() {
             {getFilteredBooks(books).map((book) => (
               <Grid key={book.id} item>
                 <BookCard
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundImage: `url(${book.image})`,
-                    backgroundPosition: "center center",
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: 155,
-                  }}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundImage: `url(${book.image})`,
+                      backgroundPosition: "center center",
+                      backgroundRepeat: "no-repeat",
+                      backgroundSize: 155,
+                    }}
+                    component={Link}
+                    to={`/book/${book.id}`}
                 />
                 <Box
                   sx={{
