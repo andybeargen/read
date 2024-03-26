@@ -72,6 +72,7 @@ export default function HatcheryRoute() {
           <Typography variant="h1" component="h1" fontFamily={"monospace"} fontWeight={"bold"} color="#98C9FF">{hatchedCritter}</Typography>
         </Container>
       </Modal>
+
       <Container
         sx={{
           height: "100vh",
@@ -97,14 +98,13 @@ export default function HatcheryRoute() {
           sx={{
             display: "flex",
             height: "7%",
-            justifyContent: "space-between",
+            justifyContent: "right",
             maxWidth: "1200px",
             padding: 0,
             position: "relative",
             top: "2rem",
           }}
         >
-          <Container></Container>
           <CoinCount count={user.coins} />
         </Container>
         <Container sx={{display: "flex", marginTop: 10, height: "100%", justifyContent: "space-between", flexDirection: "column", alignItems: "center"}}>
@@ -130,7 +130,7 @@ export default function HatcheryRoute() {
                 mb={20}
                 sx={{ "&:hover": { backgroundColor: "#001e6b", color: "white" } }}
               >
-                <Typography variant="h4" component="h1" fontFamily={"monospace"}>
+                <Typography variant="h4" component="h1" fontFamily={"monospace"} textTransform={"uppercase"}>
                   HATCH for 500
                 </Typography>
                 <CoinIcon style={{ width: "40px", marginTop: "-5px" }} />
