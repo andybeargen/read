@@ -97,7 +97,7 @@ export default function CollectionRoute() {
   };
 
   const getFilteredCritters = (critters: any) => {
-    return critters.filter((critter: any) => 
+    return critters.filter((critter: any) =>
       critters.name.toLowerCase().includes(searchItem.toLowerCase()) ||
       critters.id.toLowerCase().includes(searchItem.toLowerCase()));
   }
@@ -105,7 +105,7 @@ export default function CollectionRoute() {
 
 
   return <AuthenticatedLayout>
-    
+
 
 
 <AppBar position="static" elevation={0}>
@@ -193,9 +193,9 @@ export default function CollectionRoute() {
                     {critters.name}
                   </Typography>
                 </Box>
-      
+
   </AuthenticatedLayout>;
-  
+
 }
 
 // detect if user is logged in

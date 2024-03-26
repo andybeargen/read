@@ -1,5 +1,5 @@
 import { prisma } from "~/db.server";
-import critters from "../critters.json";
+import critters from "../app/critters";
 
 async function main() {
   // seed database with critters from critters.json

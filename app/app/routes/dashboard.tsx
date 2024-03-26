@@ -1,4 +1,5 @@
 import { Box, Container, IconButton, Typography } from "@mui/material";
+import { User } from "@prisma/client";
 import { LoaderFunction, redirect } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import {
@@ -7,9 +8,9 @@ import {
   CoinIcon,
   SettingsIcon,
 } from "~/components";
-import { authenticator } from "~/utils/auth.server";
-import { User } from "@prisma/client";
+import { Critter, critters } from "~/critters";
 import { prisma } from "~/db.server";
+import { authenticator } from "~/utils/auth.server";
 
 const CoinCount = ({ count }: { count: number }) => {
   return (
@@ -36,9 +37,15 @@ const CoinCount = ({ count }: { count: number }) => {
   );
 };
 
+interface DashboardData {
+  user: User;
+  mainCritter: Critter;
+}
+
 export default function Dashboard() {
-  const user: User = useLoaderData<typeof loader>();
-  const mainCritter = user.UserCritter;
+  const data: DashboardData = useLoaderData<typeof loader>();
+  const mainCritter = data.mainCritter;
+  const user = data.user;
 
   return (
     <AuthenticatedLayout>
@@ -107,7 +114,7 @@ export default function Dashboard() {
             }}
           >
             <img
-              src={`/critters/${mainCritter.name}.png`}
+              src={`/critters/${mainCritter.data.name}.png`}
               alt="critter"
               style={{ width: "400px" }}
             />
@@ -120,7 +127,7 @@ export default function Dashboard() {
               position={"absolute"}
               top={"51vh"}
             >
-              {mainCritter.name}
+              {mainCritter.data.name}
             </Typography>
           </Container>
 
@@ -176,16 +183,32 @@ export const loader: LoaderFunction = async ({ request }) => {
       id: user.id,
     },
     include: {
-      UserCritter: true,
+      UserCritter: true
     },
   });
   if (!userData || userData instanceof Error) {
     redirect("/");
     return null;
   }
-  const critterId = userData.UserCritter[0].critterId;
-  userData.UserCritter = await prisma.critter.findUnique({
-    where: { id: critterId },
-  });
-  return userData;
+
+  // HACK: if a critter doesnt exist we just make one. ideally this should be a selection UI for the user to pick
+  if (!userData.UserCritter[0]) {
+    // create critter
+    const critter = await prisma.userCritter.create({
+      data: {
+        critterId: "1",
+        userId: user.id,
+      },
+    });
+    userData.UserCritter.push(critter);
+  }
+
+  const mainCritter = critters.find(
+    (critter) => critter.id === userData.UserCritter[0].critterId
+  );
+
+  return {
+    user: userData,
+    mainCritter
+  };
 };

@@ -33,14 +33,6 @@ model User {
   UserCritter                UserCritter[]
 }
 
-model Critter {
-  id          String @id @default(uuid()) @map("_id")
-  name        String @unique
-  description String
-  type        String
-  UserCritter UserCritter[]
-}
-
 model UserCritter {
   id        String @id @default(uuid()) @map("_id")
   level     Int @default(1)
@@ -48,5 +40,4 @@ model UserCritter {
   userId    String
   critterId String
   user      User @relation(fields: [userId], references: [id])
-  critter   Critter @relation(fields: [critterId], references: [id])
 }

@@ -2,7 +2,7 @@ import type { Critter, UserCritter, User } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
-import critters from "../../critters.json";
+import critters from "../critters";
 
 export type { Critter } from "@prisma/client";
 export type { UserCritter } from "@prisma/client";
