@@ -3,6 +3,9 @@
   "private": true,
   "sideEffects": false,
   "type": "module",
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "scripts": {
     "build": "remix vite:build",
     "dev": "dotenv -e .env.development remix vite:dev",
@@ -12,6 +15,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:migrate:development": "dotenv -e .env.development prisma migrate dev",
+    "prisma:seed": "prisma db seed",
     "pretty": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\""
   },
   "dependencies": {
@@ -28,7 +32,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "remix-auth": "^3.6.0",
-    "remix-auth-form": "^1.4.0"
+    "remix-auth-form": "^1.4.0",
+    "tsx": "^4.7.1"
   },
   "devDependencies": {
     "@emotion/react": "^11.11.3",

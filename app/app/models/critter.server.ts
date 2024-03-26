@@ -2,6 +2,8 @@ import type { Critter, UserCritter, User } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
+import critters from "../../critters.json";
+
 export type { Critter } from "@prisma/client";
 export type { UserCritter } from "@prisma/client";
 
@@ -68,4 +70,28 @@ export async function getUserCritters(userId: User["id"]) {
       userId,
     },
   });
+}
+
+/** 
+ * Creates a new UserCritter and assigns it to the user with id of userId.
+ * @constructor
+ * @param {User["id"]} userId - The id of the user who is hatching a critter.
+ * */
+export async function hatchCritter(userId: User["id"]): Promise<Critter | null> {
+  let critterName: Critter["name"] = getRandomCritter();
+  let critter: Critter | null = await prisma.critter.findUnique({
+    where: {
+      name: critterName,
+    }
+  });
+
+  if (critter) {
+    await assignCritterToUser(userId, critter.id);
+  }
+  return critter;
+}
+
+export function getRandomCritter(): Critter["name"] {
+  let randIdx: number = Math.floor(Math.random() * critters.length);
+  return critters[randIdx].data.name;
 }

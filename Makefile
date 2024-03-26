@@ -6,6 +6,7 @@ dev:
 	npm run prisma:generate --prefix ./app
 	docker compose -f "docker-compose.yml" up -d --build db
 	npm run prisma:migrate:development --prefix ./app
+	npm run prisma:seed --prefix ./app
 	npm run dev --prefix ./app
 
 prod:
