@@ -131,7 +131,7 @@ export default function HatcheryRoute() {
                 sx={{ "&:hover": { backgroundColor: "#001e6b", color: "white" } }}
               >
                 <Typography variant="h4" component="h1" fontFamily={"monospace"} textTransform={"uppercase"}>
-                  HATCH for 500
+                  Hatch for 500
                 </Typography>
                 <CoinIcon style={{ width: "40px", marginTop: "-5px" }} />
             </Box>
