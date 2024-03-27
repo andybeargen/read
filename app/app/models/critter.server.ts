@@ -9,6 +9,7 @@ export async function getCritterById(id: Critter["id"]) {
   return prisma.critter.findUnique({ where: { id } });
 }
 
+
 export async function createCritter(
   name: Critter["name"],
   description: Critter["description"],
@@ -66,6 +67,9 @@ export async function getUserCritters(userId: User["id"]) {
   return prisma.userCritter.findMany({
     where: {
       userId,
+    },
+    include: {
+      critter: true,
     },
   });
 }
