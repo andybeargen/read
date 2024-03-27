@@ -28,7 +28,7 @@ export default function Book() {
     const [page, setPage] = useState('')
     const rendition = useRef<Rendition | undefined>(undefined)
     // todo store and get location from db
-    const [location, setLocation] = useState<string | number>(0)
+    const [location, setLocation] = useState<string | number>(1)
     
     const toc = useRef<NavItem[]>([])
     useEffect(() => {
