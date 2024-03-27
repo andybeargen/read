@@ -56,6 +56,20 @@ export async function loginUser(
   return user;
 }
 
+export async function updatePassword(
+  userId: User["id"],
+  password: User["password"],
+) {
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  return prisma.user.update({
+    where: { id: userId },
+    data: {
+      password: hashedPassword,
+    },
+  });
+}
+
 export async function addCoins(id: User["id"], amount: User["coins"]) {
   const user = await prisma.user.findUnique({
     where: {

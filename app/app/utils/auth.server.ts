@@ -6,7 +6,8 @@ import {
 } from "~/utils/sessions.server";
 import { User } from "@prisma/client";
 import { FormStrategy } from "remix-auth-form";
-import { createUser, loginUser } from "~/models/user.server";
+
+import { createUser, loginUser, updatePassword } from "~/models/user.server";
 import { createCritter, assignCritterToUser, getRandomCritter, hatchCritter } from "~/models/critter.server";
 
 // Create an instance of the authenticator, pass a generic with what
@@ -98,4 +99,52 @@ authenticator.use(
   // each strategy has a name and can be changed to use another one
   // same strategy multiple times, especially useful for the OAuth2 strategy.
   "register",
+);
+
+authenticator.use(
+  new FormStrategy(async ({ form }) => {
+    const email = form.get("email");
+    const oldPassword = form.get("oldPassword");
+    const newPassword = form.get("newPassword");
+    const confirmNewPassword = form.get("confirmNewPassword");
+
+    if (!email) throw new AuthorizationError("Email is required");
+
+    if (!oldPassword) throw new AuthorizationError("Old password is required");
+
+    if (!newPassword) throw new AuthorizationError("New password is required");
+
+    if (!confirmNewPassword)
+      throw new AuthorizationError("Confirm new password is required");
+
+    if (
+      typeof email !== "string" ||
+      typeof oldPassword !== "string" ||
+      typeof newPassword !== "string" ||
+      typeof confirmNewPassword !== "string"
+    )
+      throw new AuthorizationError("Invalid email/password");
+
+    if (!email.includes("@")) throw new AuthorizationError("Invalid email");
+
+    if (newPassword !== confirmNewPassword)
+      throw new AuthorizationError("Passwords do not match");
+
+    // fetch the user from the database
+    const user = await loginUser(email.toString(), oldPassword.toString());
+
+    if (user instanceof Error)
+    throw new AuthorizationError("Incorrect email/password");
+
+    // update the user's password
+    if (user) {
+      await updatePassword(user.id, newPassword.toString());
+    }
+
+    // the type of this user must match the type you pass to the Authenticator
+    // the strategy will automatically inherit the type if you instantiate
+    // directly inside the `use` method
+    return user;
+  }
+  ), "change-password"
 );
