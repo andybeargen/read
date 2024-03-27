@@ -91,6 +91,26 @@ authenticator.use(
       console.log(critter);
     }
 
+    // delete this when we have critter.json merged
+    let critter2 = await createCritter("Leaf Turtle", "A turtle that can shoot leaves", "Grass");
+    let critter3 = await createCritter("Bird", "A bird that can fly", "Flying");
+    let critter4 = await createCritter("Thing", "A thing that can do things", "Normal");
+
+    if (critter2 instanceof Error)
+      throw new AuthorizationError("Error creating critter");
+
+    if (critter3 instanceof Error)
+      throw new AuthorizationError("Error creating critter");
+  
+    if (critter4 instanceof Error)
+      throw new AuthorizationError("Error creating critter");
+
+    if (user) {
+      await assignCritterToUser(user.id, critter2.id);
+      await assignCritterToUser(user.id, critter3.id);
+      await assignCritterToUser(user.id, critter4.id);
+    }
+
     // the type of this user must match the type you pass to the Authenticator
     // the strategy will automatically inherit the type if you instantiate
     // directly inside the `use` method
