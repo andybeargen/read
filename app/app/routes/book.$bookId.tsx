@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useRef, useState, useEffect } from "react";
-import { ReactReader } from 'react-reader'
+import { ReactReader } from 'react-reader';
 import {
     Box,
     Container,
@@ -10,7 +10,6 @@ import { ZoomIn, ZoomOut} from "@mui/icons-material";
 import { prisma } from "~/db.server";
 import { LoaderFunction, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import useLocalStorageState from 'use-local-storage-state';
 import { authenticator } from "~/utils/auth.server";
 import { Book } from "@prisma/client";
 import { AuthenticatedLayout } from "~/components";
@@ -29,12 +28,7 @@ export default function Book() {
     const [page, setPage] = useState('')
     const rendition = useRef<Rendition | undefined>(undefined)
     // todo store and get location from db
-    const [location, setLocation] = useLocalStorageState<string | number>(
-      'persist-location',
-      {
-        defaultValue: 0,
-      }
-    )
+    const [location, setLocation] = useState<string | number>(0)
     
     const toc = useRef<NavItem[]>([])
     useEffect(() => {
