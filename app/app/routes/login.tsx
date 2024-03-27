@@ -1,6 +1,6 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useActionData } from "@remix-run/react";
 
 import { commitSession, getSession } from "~/utils/sessions.server";
 import { authenticator } from "~/utils/auth.server";
@@ -46,13 +46,13 @@ export const action: ActionFunction = async ({ request, context }) => {
   return await authenticator.authenticate("email-pass", request, {
     successRedirect: "/dashboard",
     failureRedirect: "/login",
-    throwOnError: true,
+    // throwOnError: true,
     context,
   });
 };
 
 export default function Login() {
-  const loaderData = useLoaderData<typeof loader>();
+  const actionData = useActionData<typeof loader>();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -68,7 +68,7 @@ export default function Login() {
           Welcome to LitCritters
         </Typography>
 
-        {loaderData?.error ? <p>ERROR: {loaderData?.error?.message}</p> : null}
+        {actionData?.error ? <p>ERROR: {actionData?.error?.message}</p> : null}
 
         <Form action="/login" method="post">
           <TextField
