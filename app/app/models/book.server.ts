@@ -21,6 +21,10 @@ export async function getUserLibrary(userId: User["id"]) {
   return prisma.book.findMany({ where: { userId } });
 }
 
+export async function setReadingProgress(id: Book["id"], userId: User["id"], progress: number) {
+  await prisma.book.update({ where: { id: id, userId: userId }, data: {progress: progress} });
+}
+
 export async function createBook(values: BookCreationData) {
   return prisma.book.create({
     data: values,

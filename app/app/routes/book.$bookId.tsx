@@ -13,10 +13,9 @@ import { useLoaderData } from "@remix-run/react";
 import { authenticator } from "~/utils/auth.server";
 import { Book } from "@prisma/client";
 import { AuthenticatedLayout } from "~/components";
-import { getBookById } from "~/models/book.server";
+import { getBookById, setReadingProgress } from "~/models/book.server";
 
-import * as fs from 'fs';
-import type { Contents, Rendition, NavItem } from 'epubjs'
+import type { Contents, Rendition, NavItem } from 'epubjs';
 
 
 export default function Book() {
@@ -29,6 +28,8 @@ export default function Book() {
     const rendition = useRef<Rendition | undefined>(undefined)
     // todo store and get location from db
     const [location, setLocation] = useState<string | number>(1)
+    const [totalChapters, setTotalChapters] = useState(0); // Total number of chapters
+    const [currentChapter, setCurrentChapter] = useState(0); // Current chapter
     
     const toc = useRef<NavItem[]>([])
     useEffect(() => {
@@ -47,10 +48,16 @@ export default function Book() {
                 url={filePath}
                 location={location}
                 tocChanged={(_toc) => {
-                  toc.current = _toc
+                  toc.current = _toc;
+                  setTotalChapters(_toc.length);
                 }}
                 locationChanged={(loc: string) => {
-                  setLocation(loc)
+                  setLocation(loc);
+                  const currentChapterNumber = parseInt(loc, 10)
+                  setCurrentChapter(currentChapterNumber);
+                  const progress = (currentChapterNumber / totalChapters) * 100;
+                  setReadingProgress(book.id, book.userId, progress);
+
                   if (rendition.current && toc.current) {
                     const { displayed, href } = rendition.current.location.start
                     const chapter = toc.current.find((item) => item.href === href)
@@ -73,7 +80,6 @@ export default function Book() {
                   rendition.current.themes.override("font-family", "Sans-serif");
                 }}
               />
-              
             </Box>
             <Box
               sx={{
