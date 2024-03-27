@@ -66,7 +66,7 @@ export default function HatcheryRoute() {
         <Container sx={{position: 'absolute' as 'absolute', top: "50%", left: "50%", display: "flex", transform: "translate(-50%, -50%)", width: 600, height: 600, justifyContent: "space-between", flexDirection: "column", alignItems: "center"}}>
           <Typography variant="h1" component="h1" fontFamily={"monospace"} fontWeight={"bold"} color="#E89B60">You hatched a</Typography>
           <img
-              src={`/critters/${hatchedCritter}.png`}
+              src={`/critters/${hatchedCritter}.gif`}
               alt="critter"
             />
           <Typography variant="h1" component="h1" fontFamily={"monospace"} fontWeight={"bold"} color="#98C9FF">{hatchedCritter}</Typography>
