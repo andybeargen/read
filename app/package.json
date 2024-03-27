@@ -10,7 +10,7 @@
     "build": "remix vite:build",
     "dev": "dotenv -e .env.development remix vite:dev",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
-    "start": "prisma db seed && remix-serve ./build/server/index.js",
+    "start": "remix-serve ./build/server/index.js",
     "typecheck": "tsc",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
