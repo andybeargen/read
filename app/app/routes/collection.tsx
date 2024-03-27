@@ -33,7 +33,7 @@ export default function CollectionRoute() {
                 <CardContent>
                   <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                     <img 
-                      src={`/${critter.critter.name}.gif`} 
+                      src={`/critters/${critter.critter.name}.gif`} 
                       alt={critter.critter.name} 
                       style={{ maxWidth: '100px', maxHeight: '100px' }}
                     />
