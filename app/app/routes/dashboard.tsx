@@ -109,7 +109,7 @@ export default function Dashboard() {
             <img
               src={`/critters/${mainCritter.name}.gif`}
               alt="critter"
-              style={{ width: "200px" }}
+              style={{ width: "400px" }}
             />
             <Typography
               variant="h5"
