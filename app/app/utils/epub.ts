@@ -26,5 +26,6 @@ export async function parseEpub(epubFile: File) {
     genre: "",
     file: buffer as Buffer,
     image: img[0],
+    chapterCount: epub.flow.length
   };
 }

@@ -10,6 +10,7 @@ import { ZoomIn, ZoomOut} from "@mui/icons-material";
 import { prisma } from "~/db.server";
 import { LoaderFunction, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import useLocalStorageState from 'use-local-storage-state';
 import { authenticator } from "~/utils/auth.server";
 import { Book } from "@prisma/client";
 import { AuthenticatedLayout } from "~/components";
@@ -20,17 +21,20 @@ import type { Contents, Rendition, NavItem } from 'epubjs'
 export default function Book() {
     const temp_url = "https://react-reader.metabits.no/files/alice.epub";
 
-
-    
-
     const book: Book = useLoaderData<typeof loader>();
     const [largeText, setLargeText] = useState(false)
     const [page, setPage] = useState('')
     const rendition = useRef<Rendition | undefined>(undefined)
-    const [location, setLocation] = useState<string | number>(0)
+    const [location, setLocation] = useLocalStorageState<string | number>(
+      'persist-location',
+      {
+        defaultValue: 0,
+      }
+    )
+    
     const toc = useRef<NavItem[]>([])
     useEffect(() => {
-      rendition.current?.themes.fontSize(largeText ? '140%' : '100%')
+      rendition.current?.themes.fontSize(largeText ? '130%' : '100%')
     }, [largeText])
 
     return (
@@ -44,7 +48,9 @@ export default function Book() {
               <ReactReader
                 url={temp_url}
                 location={location}
-                tocChanged={(_toc) => (toc.current = _toc)}
+                tocChanged={(_toc) => {
+                  toc.current = _toc
+                }}
                 locationChanged={(loc: string) => {
                   setLocation(loc)
                   if (rendition.current && toc.current) {
@@ -65,9 +71,9 @@ export default function Book() {
                       }
                     }
                   })
-                  rendition.current.themes.fontSize(largeText ? '140%' : '100%')
+                  rendition.current.themes.fontSize(largeText ? '130%' : '100%')
+                  rendition.current.themes.override("font-family", "Sans-serif");
                 }}
-                
               />
               
             </Box>
@@ -84,7 +90,7 @@ export default function Book() {
                 <Button onClick={() => setLargeText(false)} className="btn">
                   <ZoomOut />
                 </Button>
-                <Box>{page}</Box>
+                <Box> {page}</Box>
             </Box>
             </Container>
           
