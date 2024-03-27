@@ -1,49 +1,26 @@
-{
-  "critters": [
-    {
-      "id": 1,
-      "name": "Squirtle",
-      "type": "Water",
-      "hp": 44,
-      "attack": 48,
-      "defense": 65,
-      "speed": 43,
-      "images": {
-        "happy": "http://img.pokemondb.net/sprites/black-white/anim/normal/squirtle.gif",
-        "sad": "http://img.pokemondb.net/sprites/black-white/anim/normal/squirtle.gif",
-        "angry": "http://img.pokemondb.net/sprites/black-white/anim/normal/squirtle.gif",
-        "yummy": "http://img.pokemondb.net/sprites/black-white/anim/normal/squirtle.gif"
-      }
+[
+  {
+    "data": {
+      "name": "Kelpxolotl",
+      "description": "Kelpxolotl make great hosuehold pets due to their ability to adapt to different bodies of water. It is said that the kelp that grows from Kelpxolotl are extremely tasty.",
+      "type": "Water"
     },
-    {
-      "id": 2,
-      "name": "Charmander",
-      "type": "Fire",
-      "hp": 39,
-      "attack": 52,
-      "defense": 43,
-      "speed": 65,
-      "images": {
-        "happy": "http://img.pokemondb.net/sprites/black-white/anim/normal/charmander.gif",
-        "sad": "http://img.pokemondb.net/sprites/black-white/anim/normal/charmander.gif",
-        "angry": "http://img.pokemondb.net/sprites/black-white/anim/normal/charmander.gif",
-        "yummy": "http://img.pokemondb.net/sprites/black-white/anim/normal/charmander.gif"
-      }
+    "weight": 1
+  },
+  {
+    "data": {
+      "name": "Ignepig",
+      "description": "Ignepig can generate massive amount of heat from their bodies allowing their fur to combust. Because of this, Ignepig are the leading cause of house fires.",
+      "type": "Fire"
     },
-    {
-      "id": 3,
-      "name": "Bulbasaur",
-      "type": "Grass",
-      "hp": 45,
-      "attack": 49,
-      "defense": 49,
-      "speed": 45,
-      "images": {
-        "happy": "http://img.pokemondb.net/sprites/black-white/anim/normal/bulbasaur.gif",
-        "sad": "http://img.pokemondb.net/sprites/black-white/anim/normal/bulbasaur.gif",
-        "angry": "http://img.pokemondb.net/sprites/black-white/anim/normal/bulbasaur.gif",
-        "yummy": "http://img.pokemondb.net/sprites/black-white/anim/normal/bulbasaur.gif"
-      }
-    }
-  ]
-}
+    "weight": 1
+  },
+  {
+    "data": {
+      "name": "Shurtle",
+      "description": "Despite looking like a turtle, Shurtle are more closely related to fungus. They can often be found sleeping on fallen trees and other decomposing plant matter.",
+      "type": "Grass"
+    },
+    "weight": 1
+  }
+]
