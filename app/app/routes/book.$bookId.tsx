@@ -14,17 +14,21 @@ import useLocalStorageState from 'use-local-storage-state';
 import { authenticator } from "~/utils/auth.server";
 import { Book } from "@prisma/client";
 import { AuthenticatedLayout } from "~/components";
+import { getBookById } from "~/models/book.server";
 
+import * as fs from 'fs';
 import type { Contents, Rendition, NavItem } from 'epubjs'
 
 
 export default function Book() {
-    const temp_url = "https://react-reader.metabits.no/files/alice.epub";
-
     const book: Book = useLoaderData<typeof loader>();
+
+    const filePath = "/files/current.epub";
+
     const [largeText, setLargeText] = useState(false)
     const [page, setPage] = useState('')
     const rendition = useRef<Rendition | undefined>(undefined)
+    // todo store and get location from db
     const [location, setLocation] = useLocalStorageState<string | number>(
       'persist-location',
       {
@@ -46,7 +50,7 @@ export default function Book() {
             >
               <Box style={{ height: '90%'}}>
               <ReactReader
-                url={temp_url}
+                url={filePath}
                 location={location}
                 tocChanged={(_toc) => {
                   toc.current = _toc
@@ -125,12 +129,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       where: { id: critterId },
     });
 
-    const bookData = await prisma.book.findUnique({
-      where: {
-        id: params.bookId,
-      },
-    });
-
+    const bookData = params.bookId ? await getBookById(params.bookId): null;
     return bookData;
   };
   
