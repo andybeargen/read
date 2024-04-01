@@ -37,7 +37,10 @@ const CoinCount = ({ count }: { count: number }) => {
 export default function HatcheryRoute() {
   let user: User = useLoaderData<typeof loader>();
   const [open, setOpen] = useState(false);
-  const [hatchedCritter, setHatchedCritter] = useState("Kelpxolotl");
+  const [hatchedCritter, setHatchedCritter] = useState({
+    "name": "",
+    image: "",
+  });
   const handleClose = () => setOpen(false);
 
   async function hatchCritterAndNotify() {
@@ -54,7 +57,7 @@ export default function HatcheryRoute() {
     if (error) {
       alert(error);
     } else {
-      setHatchedCritter(critter.name);
+      setHatchedCritter(critter);
       setOpen(true);
       user.coins -= 500;
     }
@@ -66,10 +69,10 @@ export default function HatcheryRoute() {
         <Container sx={{position: 'absolute' as 'absolute', top: "50%", left: "50%", display: "flex", transform: "translate(-50%, -50%)", width: 600, height: 600, justifyContent: "space-between", flexDirection: "column", alignItems: "center"}}>
           <Typography variant="h1" component="h1" fontFamily={"monospace"} fontWeight={"bold"} color="#E89B60">You hatched a</Typography>
           <img
-              src={`/critters/${hatchedCritter}.gif`}
+              src={`/critters/${hatchedCritter.image}`}
               alt="critter"
             />
-          <Typography variant="h1" component="h1" fontFamily={"monospace"} fontWeight={"bold"} color="#98C9FF">{hatchedCritter}</Typography>
+          <Typography variant="h1" component="h1" fontFamily={"monospace"} fontWeight={"bold"} color="#98C9FF">{hatchedCritter.name}</Typography>
         </Container>
       </Modal>
 

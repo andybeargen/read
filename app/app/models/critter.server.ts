@@ -11,35 +11,12 @@ export async function getCritterById(id: Critter["id"]) {
   return prisma.critter.findUnique({ where: { id } });
 }
 
-
-export async function createCritter(
-  name: Critter["name"],
-  description: Critter["description"],
-  type: Critter["type"]
-) {
-  const critterExists = await prisma.critter.findUnique({
-    where: {
-      name: name,
-    },
-  });
-
-  if (critterExists) {
-    return critterExists;
-  }
-
-  return prisma.critter.create({
-    data: {
-      name: name,
-      description: description,
-      type: type,
-    },
-  });
-}
 export async function updateCritter(
   id: Critter["id"],
   name: Critter["name"],
   description: Critter["description"],
-  type: Critter["type"]
+  type: Critter["type"],
+  image: Critter["image"]
 ) {
   return prisma.critter.update({
     where: {
@@ -49,6 +26,7 @@ export async function updateCritter(
       name: name,
       description: description,
       type: type,
+      image: image,
     },
   });
 }
