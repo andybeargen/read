@@ -39,6 +39,7 @@ model Critter {
   name        String @unique
   description String
   type        String
+  image       String
   UserCritter UserCritter[]
 }
 

@@ -3,7 +3,8 @@
     "data": {
       "name": "Kelpxolotl",
       "description": "Kelpxolotl make great hosuehold pets due to their ability to adapt to different bodies of water. It is said that the kelp that grows from Kelpxolotl are extremely tasty.",
-      "type": "Water"
+      "type": "Water",
+      "image": "Kelpxolotl.png"
     },
     "weight": 1
   },
@@ -11,7 +12,8 @@
     "data": {
       "name": "Ignepig",
       "description": "Ignepig can generate massive amount of heat from their bodies allowing their fur to combust. Because of this, Ignepig are the leading cause of house fires.",
-      "type": "Fire"
+      "type": "Fire",
+      "image": "Ignepig.png"
     },
     "weight": 1
   },
@@ -19,7 +21,35 @@
     "data": {
       "name": "Shurtle",
       "description": "Despite looking like a turtle, Shurtle are more closely related to fungus. They can often be found sleeping on fallen trees and other decomposing plant matter.",
-      "type": "Grass"
+      "type": "Grass",
+      "image": "Shurtle.png"
+    },
+    "weight": 1
+  },
+  {
+    "data": {
+      "name": "Leaf Turtle",
+      "description": "Leaf Turtle are known for their ability to camouflage themselves in the forest. They are often mistaken for rocks or leaves.",
+      "type": "Grass",
+      "image": "LeafTurtle.png"
+    },
+    "weight": 1
+    },
+  {
+    "data": {
+      "name": "Red Bird",
+      "description": "Red Bird are known for their beautiful red feathers. They are often seen flying in the sky during the day.",
+      "type": "Flying",
+      "image": "RedBird.png"
+    },
+    "weight": 1
+  },
+  {
+    "data": {
+      "name": "Thing",
+      "description": "Thing is a mysterious creature that is said to be able to take on the form of anything it sees. It is said that Thing can be found in the darkest corners of the world.",
+      "type": "Normal",
+      "image": "Thing.png"
     },
     "weight": 1
   }

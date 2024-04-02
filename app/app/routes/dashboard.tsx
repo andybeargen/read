@@ -107,7 +107,7 @@ export default function Dashboard() {
             }}
           >
             <img
-              src={`/critters/${mainCritter.name}.gif`}
+              src={`/critters/${mainCritter.image}`}
               alt="critter"
               style={{ maxWidth: "300px" }}
             />
