@@ -103,8 +103,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       failureRedirect: "/",
     });
     if (user instanceof Error || !user) {
-      redirect("/");
-      return null;
+      return redirect("/");
     }
     const userData = await prisma.user.findUnique({
       where: {
@@ -115,8 +114,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       },
     });
     if (!userData || userData instanceof Error) {
-      redirect("/");
-      return null;
+      return redirect("/");
+    }
+    // check if user has no critters, if they don't redirect to /select-critter
+    if (userData.UserCritter.length === 0) {
+      return redirect("/select-critter");
     }
     const critterId = userData.UserCritter[0].critterId;
     userData.UserCritter = await prisma.critter.findUnique({

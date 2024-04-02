@@ -86,11 +86,6 @@ authenticator.use(
     if (user instanceof Error)
       throw new AuthorizationError("User already exists");
 
-    if (user) {
-      const critter = await hatchCritter(user.id);
-      console.log(critter);
-    }
-
     // the type of this user must match the type you pass to the Authenticator
     // the strategy will automatically inherit the type if you instantiate
     // directly inside the `use` method

@@ -22,6 +22,7 @@ import { getSession, commitSession } from "../utils/sessions.server";
 import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from "@remix-run/node";
 import { createBook, getUserLibrary } from "~/models/book.server";
 import { parseEpub } from "~/utils/epub";
+import { prisma } from "~/db.server";
 
 export async function action({ request }: ActionFunctionArgs) {
   let user = await authenticator.isAuthenticated(request, {
@@ -269,6 +270,19 @@ export const loader: LoaderFunction = async ({ request }) => {
           book.image = "";
         }
     })
+
+    // check if user has no critters, if they don't redirect to /select-critter
+    const userData = await prisma.user.findUnique({
+      where: {
+        id: user.id,
+      },
+      include: {
+        UserCritter: true,
+      },
+    });
+    if (userData.UserCritter.length === 0) {
+      return redirect("/select-critter");
+    }
 
     return json(
       { books }

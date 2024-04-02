@@ -25,7 +25,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export async function action({ request, context }: ActionFunctionArgs) {
   return await authenticator.authenticate("register", request, {
-    successRedirect: "/dashboard",
+    successRedirect: "/select-critter",
     failureRedirect: "/register",
     throwOnError: true,
     context,
