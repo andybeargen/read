@@ -18,7 +18,17 @@ export async function getBookById(id: Book["id"]) {
 }
 
 export async function getUserLibrary(userId: User["id"]) {
-  return prisma.book.findMany({ where: { userId } });
+  return prisma.book.findMany({
+    where: {
+      userId
+    },
+    select: {
+      id: true,
+      title: true,
+      author: true,
+      image: true
+    }
+  });
 }
 
 export async function createBook(values: BookCreationData) {
