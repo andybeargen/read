@@ -163,7 +163,7 @@ export default function HatcheryRoute() {
           >
             Hatchery
           </Typography>
-          <img src={`/Egg.png`} alt="critter" />
+          <img src={`/Egg.png`} alt="An unhatched egg" />
           <div
             onClick={hatchCritterAndNotify}
             style={{ width: "100%", display: "flex", justifyContent: "center" }}
