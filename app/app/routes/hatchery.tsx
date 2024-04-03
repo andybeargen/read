@@ -22,7 +22,7 @@ const CoinCount = ({ count }: { count: number }) => {
       alignItems={"center"}
       gap={1}
       bgcolor={"#0045bd"}
-      borderRadius={"30px"}
+      borderRadius={"999em"}
       px={1}
       py={0.5}
     >
@@ -34,7 +34,7 @@ const CoinCount = ({ count }: { count: number }) => {
       >
         {count}
       </Typography>
-      <CoinIcon style={{ width: "30px" }} />
+      <CoinIcon style={{ width: "2em" }} />
     </Box>
   );
 };
@@ -98,7 +98,10 @@ export default function HatcheryRoute() {
           >
             You hatched a
           </Typography>
-          <img src={`/critters/${hatchedCritter.image}`} alt={hatchedCritter.name} />
+          <img
+            src={`/critters/${hatchedCritter.image}`}
+            alt={hatchedCritter.name}
+          />
           <Typography
             variant="h1"
             component="h1"
@@ -165,7 +168,13 @@ export default function HatcheryRoute() {
           </Typography>
           <img src={`/Egg.png`} alt="An unhatched egg" />
           <div
-            style={{ width: "100%", display: "flex", justifyContent: "center", height: "100%", alignItems: "center" }}
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              height: "100%",
+              alignItems: "center",
+            }}
           >
             <Button
               onClick={hatchCritterAndNotify}
@@ -180,7 +189,16 @@ export default function HatcheryRoute() {
               }}
               variant="contained"
               color="secondary"
-              endIcon={<CoinIcon style={{ width: "40px", marginTop: "-5px", marginRight: "10px" }} fill={"white"} />}
+              endIcon={
+                <CoinIcon
+                  style={{
+                    width: "40px",
+                    marginTop: "-5px",
+                    marginRight: "10px",
+                  }}
+                  fill={"white"}
+                />
+              }
             >
               Hatch for 500
             </Button>

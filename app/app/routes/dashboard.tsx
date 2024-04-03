@@ -19,7 +19,7 @@ const CoinCount = ({ count }: { count: number }) => {
       alignItems={"center"}
       gap={1}
       bgcolor={"#0045bd"}
-      borderRadius={"30px"}
+      borderRadius={"999em"}
       px={1}
       py={0.5}
     >
@@ -31,7 +31,7 @@ const CoinCount = ({ count }: { count: number }) => {
       >
         {count}
       </Typography>
-      <CoinIcon style={{ width: "30px" }} />
+      <CoinIcon style={{ width: "2em" }} />
     </Box>
   );
 };
@@ -138,13 +138,22 @@ export default function Dashboard() {
             }}
             variant="contained"
             color="secondary"
-            startIcon={<BookIcon style={{ width: "40px", marginTop: "-5px", marginRight: "10px" }} fill={"white"} />}
+            startIcon={
+              <BookIcon
+                style={{
+                  width: "40px",
+                  marginTop: "-5px",
+                  marginRight: "10px",
+                }}
+                fill={"white"}
+              />
+            }
           >
             Read
-        </Button>
+          </Button>
+        </Container>
       </Container>
-    </Container>
-    </AuthenticatedLayout >
+    </AuthenticatedLayout>
   );
 }
 
