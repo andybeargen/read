@@ -1,5 +1,6 @@
 import { withEmotionCache } from "@emotion/react";
-import { CssBaseline, Typography } from "@mui/material";
+// eslint-disable-next-line no-restricted-imports
+import { Alert, unstable_useEnhancedEffect as useEnhancedEffect } from "@mui/material";
 import {
   Links,
   Meta,
@@ -9,25 +10,31 @@ import {
   isRouteErrorResponse,
   useRouteError,
 } from "@remix-run/react";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import ClientStyleContext from "./contexts/ClientStyleContext";
 
-const Document = withEmotionCache((_, emotionCache) => {
+interface DocumentProps {
+  children: React.ReactNode;
+  title?: string;
+}
+
+const Document = withEmotionCache(({ children, title }: DocumentProps, emotionCache) => {
   const clientStyleData = useContext(ClientStyleContext);
 
   // Only executed on client
-  useEffect(() => {
+  useEnhancedEffect(() => {
     // re-link sheet container
     emotionCache.sheet.container = document.head;
     // re-inject tags
     const tags = emotionCache.sheet.tags;
     emotionCache.sheet.flush();
     tags.forEach((tag) => {
+      // eslint-disable-next-line no-underscore-dangle
       (emotionCache.sheet as any)._insertTag(tag);
     });
-
     // reset cache to reapply global styles
     clientStyleData.reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -35,12 +42,13 @@ const Document = withEmotionCache((_, emotionCache) => {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {title ? <title>{title}</title> : null}
         <Meta />
         <Links />
+        <meta name="emotion-insertion-point" content="emotion-insertion-point" />
       </head>
       <body>
-        <CssBaseline />
-        <Outlet />
+        {children}
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -48,28 +56,28 @@ const Document = withEmotionCache((_, emotionCache) => {
   );
 });
 
-export function ErrorBoundary() {
-  const error = useRouteError();
+// https://remix.run/docs/en/main/route/component
+// https://remix.run/docs/en/main/file-conventions/routes
+export default function App() {
   return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <Typography variant="h1">
-          {isRouteErrorResponse(error)
-            ? `${error.status} ${error.statusText}`
-            : error instanceof Error
-              ? error.message
-              : "Unknown Error"}
-        </Typography>
-        <Scripts />
-      </body>
-    </html>
+    <Document>
+      <Outlet />
+    </Document>
   );
 }
 
-export default Document;
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  return (
+    <Document title="Error">
+      <Alert severity="error">
+        {isRouteErrorResponse(error)
+          ? error.statusText
+          : error instanceof Error
+            ? error.message
+            : "Unknown Error"}
+      </Alert>
+    </Document>
+  );
+}
