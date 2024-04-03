@@ -20,6 +20,7 @@ export default function LogoutRoute() {
       </Typography>
       <Form method="post" action="/logout">
         <Button
+          type="submit"
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
