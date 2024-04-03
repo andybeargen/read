@@ -8,7 +8,12 @@ import { User } from "@prisma/client";
 import { FormStrategy } from "remix-auth-form";
 
 import { createUser, loginUser, updatePassword } from "~/models/user.server";
-import { createCritter, assignCritterToUser, getRandomCritter, hatchCritter } from "~/models/critter.server";
+import {
+  createCritter,
+  assignCritterToUser,
+  getRandomCritter,
+  hatchCritter,
+} from "~/models/critter.server";
 
 // Create an instance of the authenticator, pass a generic with what
 // strategies will return and will store in the session
@@ -39,15 +44,22 @@ authenticator.use(
 
     if (!email.includes("@")) throw new AuthorizationError("Invalid email");
 
+    let user: User | null = null;
     // fetch the user from the database
-    const user = await loginUser(email.toString(), password.toString());
 
-    if (user instanceof Error)
+    try {
+      // the type of this user must match the type you pass to the Authenticator
+      // the strategy will automatically inherit the type if you instantiate
+      // directly inside the `use` method
+      user = await loginUser(email.toString(), password.toString());
+    } catch (e) {
+      throw new AuthorizationError("Error logging in. Please try again.");
+    }
+
+    if (user === null) {
       throw new AuthorizationError("Incorrect email/password");
+    }
 
-    // the type of this user must match the type you pass to the Authenticator
-    // the strategy will automatically inherit the type if you instantiate
-    // directly inside the `use` method
     return user;
   }),
   // each strategy has a name and can be changed to use another one
@@ -77,44 +89,30 @@ authenticator.use(
     if (!email.includes("@")) throw new AuthorizationError("Invalid email");
 
     // fetch the user from the database
-    const user = await createUser(
+    return await createUser(
       username.toString(),
       email.toString(),
       password.toString(),
-    );
+    ).then((user) => {
+      if (user instanceof Error) {
+        throw new AuthorizationError("User already exists");
+      }
 
-    if (user instanceof Error)
-      throw new AuthorizationError("User already exists");
+      if (user === null || user === undefined || Object.keys(user).length === 0) {
+        throw new AuthorizationError("Error creating user");
+      }
 
-    if (user) {
-      const critter = await hatchCritter(user.id);
-      console.log(critter);
-    }
+      if (user) {
+        const critter = hatchCritter(user.id);
+        console.log(critter);
+      }
 
-    // delete this when we have critter.json merged
-    let critter2 = await createCritter("Leaf Turtle", "A turtle that can shoot leaves", "Grass");
-    let critter3 = await createCritter("Bird", "A bird that can fly", "Flying");
-    let critter4 = await createCritter("Thing", "A thing that can do things", "Normal");
+      // the type of this user must match the type you pass to the Authenticator
+      // the strategy will automatically inherit the type if you instantiate
+      // directly inside the `use` method
+      return user;
+    });
 
-    if (critter2 instanceof Error)
-      throw new AuthorizationError("Error creating critter");
-
-    if (critter3 instanceof Error)
-      throw new AuthorizationError("Error creating critter");
-  
-    if (critter4 instanceof Error)
-      throw new AuthorizationError("Error creating critter");
-
-    if (user) {
-      await assignCritterToUser(user.id, critter2.id);
-      await assignCritterToUser(user.id, critter3.id);
-      await assignCritterToUser(user.id, critter4.id);
-    }
-
-    // the type of this user must match the type you pass to the Authenticator
-    // the strategy will automatically inherit the type if you instantiate
-    // directly inside the `use` method
-    return user;
   }),
   // each strategy has a name and can be changed to use another one
   // same strategy multiple times, especially useful for the OAuth2 strategy.
@@ -154,7 +152,7 @@ authenticator.use(
     const user = await loginUser(email.toString(), oldPassword.toString());
 
     if (user instanceof Error)
-    throw new AuthorizationError("Incorrect email/password");
+      throw new AuthorizationError("Incorrect email/password");
 
     // update the user's password
     if (user) {
@@ -165,6 +163,6 @@ authenticator.use(
     // the strategy will automatically inherit the type if you instantiate
     // directly inside the `use` method
     return user;
-  }
-  ), "change-password"
+  }),
+  "change-password",
 );

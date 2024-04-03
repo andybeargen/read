@@ -10,9 +10,10 @@ async function main() {
       create: {
         name: critter.data.name,
         description: critter.data.description,
-        type: critter.data.type
+        type: critter.data.type,
+        image: critter.data.image,
       },
-    })
+    });
   });
 }
 
@@ -24,4 +25,4 @@ main()
     console.error(e);
     await prisma.$disconnect();
     process.exit(1);
-  })
+  });

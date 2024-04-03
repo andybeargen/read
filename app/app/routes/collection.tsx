@@ -13,29 +13,40 @@ export default function CollectionRoute() {
     <AuthenticatedLayout>
       <Box
         sx={{
-          minHeight: '100vh',
-          color: '#000',
+          minHeight: "100vh",
+          color: "#000",
         }}
       >
-        <Typography variant="h2" sx={{ mb: 2, color: '#3f51b5', textAlign: 'center', fontWeight: 'bold' }}>
+        <Typography
+          variant="h2"
+          sx={{
+            mb: 2,
+            color: "#3f51b5",
+            textAlign: "center",
+            fontWeight: "bold",
+          }}
+        >
           Critter Collection
         </Typography>
         <Grid container spacing={2}>
           {critters.map((critter) => (
             <Grid item xs={12} sm={6} md={4} key={critter.id}>
-              <Card sx={{ 
-                backgroundImage: 'linear-gradient(to right, #FFCC80, #80D8FF)', 
-                border: '1px solid #ccc', 
-                boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', 
-                borderRadius: '15px',
-                padding: '1rem'
-              }}>
+              <Card
+                sx={{
+                  backgroundImage:
+                    "linear-gradient(to right, #FFCC80, #80D8FF)",
+                  border: "1px solid #ccc",
+                  boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+                  borderRadius: "15px",
+                  padding: "1rem",
+                }}
+              >
                 <CardContent>
-                  <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img 
-                      src={`/critters/${critter.critter.name}.gif`} 
-                      alt={critter.critter.name} 
-                      style={{ maxWidth: '100px', maxHeight: '100px' }}
+                  <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <img
+                      src={`/critters/${critter.critter.image}`}
+                      alt={critter.critter.name}
+                      style={{ maxWidth: "100px", maxHeight: "100px" }}
                     />
                   </Box>
                   <Typography variant="h5" sx={{ mt: 2 }}>
@@ -67,7 +78,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     redirect("/");
     return null;
   }
- // get all the user's critters
+  // get all the user's critters
   const critters = await getUserCritters(user.id);
   return { critters };
 };
