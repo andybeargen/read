@@ -1,4 +1,4 @@
-import { Box, Container, IconButton, Typography } from "@mui/material";
+import { Box, Button, Container, IconButton, Typography } from "@mui/material";
 import { LoaderFunction, redirect } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import {
@@ -88,7 +88,7 @@ export default function Dashboard() {
 
         <Container
           sx={{
-            height: "93%",
+            height: "calc(100% - 10em)",
             display: "flex",
             flexDirection: "column",
             pl: 0,
@@ -109,7 +109,7 @@ export default function Dashboard() {
             <img
               src={`/critters/${mainCritter.image}`}
               alt={mainCritter.name}
-              style={{ maxWidth: "300px" }}
+              style={{ maxWidth: "300px", maxHeight: "calc(50vh - 10em)" }}
             />
             <Typography
               variant="h5"
@@ -124,40 +124,27 @@ export default function Dashboard() {
             </Typography>
           </Container>
 
-          <Link
+          <Button
+            component={Link}
             to={"/library"}
-            style={{
-              textDecoration: "none",
+            sx={{
               alignItems: "center",
               display: "flex",
               justifyContent: "center",
+              width: "100%",
+              height: "3em",
+              borderRadius: "999em",
+              fontSize: "2rem",
             }}
+            variant="contained"
+            color="secondary"
+            startIcon={<BookIcon style={{ width: "40px", marginTop: "-5px", marginRight: "10px" }} fill={"white"} />}
           >
-            <Box
-              bgcolor={"#D9F4FF"}
-              fontSize={"2em"}
-              gap={2}
-              alignItems={"center"}
-              display={"flex"}
-              flexDirection={"row"}
-              justifyContent={"center"}
-              width={"80%"}
-              height={"80px"}
-              borderRadius={"50px"}
-              border={"2px solid #E89B60"}
-              color={"#0045bd"}
-              mb={20}
-              sx={{ "&:hover": { backgroundColor: "#001e6b", color: "white" } }}
-            >
-              <Typography variant="h4" component="h1" fontFamily={"monospace"}>
-                READ
-              </Typography>
-              <BookIcon style={{ width: "40px", marginTop: "-5px" }} />
-            </Box>
-          </Link>
-        </Container>
+            Read
+        </Button>
       </Container>
-    </AuthenticatedLayout>
+    </Container>
+    </AuthenticatedLayout >
   );
 }
 

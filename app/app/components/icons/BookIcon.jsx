@@ -4,7 +4,6 @@ export const BookIcon = (props) => (
     xmlSpace="preserve"
     width={800}
     height={800}
-    fill="#0045bd"
     viewBox="0 0 318.336 318.336"
     {...props}
   >
