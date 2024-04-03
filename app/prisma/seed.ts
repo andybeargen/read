@@ -13,7 +13,7 @@ async function main() {
         type: critter.data.type,
         image: critter.data.image,
       },
-    })
+    });
   });
 }
 
@@ -25,4 +25,4 @@ main()
     console.error(e);
     await prisma.$disconnect();
     process.exit(1);
-  })
+  });

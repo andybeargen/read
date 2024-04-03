@@ -19,6 +19,8 @@
     "pretty": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\""
   },
   "dependencies": {
+    "@emotion/cache": "^11.11.0",
+    "@emotion/server": "^11.11.0",
     "@prisma/client": "^5.9.1",
     "@remix-run/css-bundle": "^2.6.0",
     "@remix-run/node": "^2.6.0",
