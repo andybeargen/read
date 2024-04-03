@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import { ActionFunctionArgs, LoaderFunction, json } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
+import { useState } from "react";
 import { LoginCardLayout } from "~/components/LoginCardLayout";
 import { authenticator } from "~/utils/auth.server";
 import { commitSession, getSession } from "~/utils/sessions.server";
@@ -32,7 +33,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export async function action({ request, context }: ActionFunctionArgs) {
   return await authenticator.authenticate("register", request, {
-    successRedirect: "/dashboard",
+    successRedirect: "/",
     failureRedirect: "/register",
     throwOnError: true,
     context,
@@ -41,6 +42,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
 export default function Register() {
   const actionData = useActionData<typeof loader>();
+  const [clicked, setClicked] = useState(false);
 
   return (
     <LoginCardLayout>
@@ -56,7 +58,7 @@ export default function Register() {
         <p>ERROR: {actionData?.error?.message}</p>
       ) : null}
 
-      <Form action="/login" method="post">
+      <Form action="/register" method="post" onSubmit={() => setClicked(true)}>
         <TextField
           margin="normal"
           required
@@ -87,10 +89,12 @@ export default function Register() {
         <Button
           type="submit"
           fullWidth
+          component="button"
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
+          disabled={clicked}
         >
-          Register
+          {clicked ? "Registering..." : "Register"}
         </Button>
         <Grid container justifyContent="center">
           <Grid item>
