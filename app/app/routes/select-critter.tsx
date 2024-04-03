@@ -1,25 +1,9 @@
 import { authenticator } from "~/utils/auth.server";
-import { User } from "@prisma/client";
 import { prisma } from "~/db.server";
-import {
-  ActionFunction,
-  LoaderFunction,
-  json,
-  redirect,
-} from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
-import {
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  CardActionArea,
-  Button,
-  Box,
-} from "@mui/material";
+import { LoaderFunction, redirect } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import { CardContent, Container, Typography, Button, Box } from "@mui/material";
 import { useState } from "react";
-import pkg from "react-router-dom";
-const { useHistory } = pkg;
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await authenticator.isAuthenticated(request, {
@@ -36,14 +20,12 @@ export const loader: LoaderFunction = async ({ request }) => {
       UserCritter: true,
     },
   });
-  // check if user has critters, if they do redirect to /dashboard
   if (userData.UserCritter.length > 0) {
     return redirect("/dashboard");
   }
   if (!userData || userData instanceof Error) {
     return redirect("/");
   }
-  // get 3 random critters
   const critters = await prisma.critter.findMany({
     take: 3,
     orderBy: {
@@ -72,24 +54,25 @@ export default function SelectCritter() {
     });
 
     if (response.ok) {
-      const history = useHistory();
-      history.replace("/dashboard");
+      window.history.pushState(null, "", "/dashboard");
+      window.history.replaceState(null, "", "/dashboard");
+      window.location.href = "/dashboard";
     }
   }
 
   return (
-    <Grid
-      container
-      justifyContent="center"
-      spacing={2}
-      style={{ paddingTop: "2em" }}
+    <Container
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        paddingTop: "2em",
+        maxHeight: "100vh",
+        justifyContent: "space-between",
+      }}
     >
-      <Typography variant="h4" component="h1" gutterBottom>
-        Welcome to LitCritters! To begin your reading journey, please select a
-        starting critter from the options below
-      </Typography>
       <Box
-        style={{
+        sx={{
           background: "linear-gradient(to top, #E89B60, #98C9FF)",
           position: "absolute",
           top: 0,
@@ -99,63 +82,95 @@ export default function SelectCritter() {
           zIndex: -1,
         }}
       />
-      <Grid
-        container
-        item
-        xs={12}
-        justifyContent="center"
-        spacing={2}
-        direction="column"
+      <Typography
+        variant="h4"
+        component="h1"
+        sx={{
+          textAlign: "center",
+          flex: "0 0 10vh",
+        }}
+        gutterBottom
+      >
+        Welcome to LitCritters! To begin your reading journey, please select a
+        starting critter from the options below
+      </Typography>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gap: 2,
+          maxHeight: "70vh",
+          alignItems: "start",
+          justifyContent: "center",
+        }}
       >
         {critters.map((critter: any) => (
-          <Grid item key={critter.id} xs={12} sm={6} md={4}>
-            <Card
-              sx={{
-                maxWidth: 800,
-                borderRadius: 2,
-                boxShadow: 3,
-                background: "linear-gradient(to right, #FFC371, #FF5F6D)",
-                border:
-                  critter.id === selectedCritter ? "5px solid #a32727" : "none",
-              }}
-            >
-              <CardActionArea onClick={() => setSelectedCritter(critter.id)}>
-                <img
-                  style={{ height: 140, width: "100%", objectFit: "contain" }}
-                  src={`/critters/${critter.image}`}
-                  alt={critter.name}
-                />
-                <CardContent>
-                  <Typography variant="h5" component="div" fontWeight={700}>
-                    {critter.name}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    fontWeight={700}
-                  >
-                    {critter.description}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-      <Box mt={2}>
-        <Grid container justifyContent="center">
-          <Button
+          <Box
+            key={critter.id}
             sx={{
-              backgroundColor: "#98C9FF",
-              color: "#0045bd",
-              fontWeight: 700,
+              maxWidth: 800,
+              borderRadius: 2,
+              boxShadow: 3,
+              background: "linear-gradient(to right, #FFC371, #FF5F6D)",
+              border:
+                critter.id === selectedCritter ? "3px solid #a32727" : "none",
+              marginBottom: 2,
+              cursor: "pointer",
+              "& > *": {
+                pointerEvents: "none",
+              },
+              "&:hover": {
+                filter: "brightness(1.1)",
+              },
             }}
-            onClick={handleConfirmClick}
+            onClick={() => {
+              setSelectedCritter(critter.id);
+            }}
           >
-            CONFIRM
-          </Button>
-        </Grid>
+            <img
+              style={{
+                height: 140,
+                width: "100%",
+                objectFit: "contain",
+              }}
+              src={`/critters/${critter.image}`}
+              alt={critter.name}
+            />
+            <CardContent>
+              <Typography variant="h5" component="div" fontWeight={700}>
+                {critter.name}
+              </Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                fontWeight={700}
+              >
+                {critter.description}
+              </Typography>
+            </CardContent>
+          </Box>
+        ))}
       </Box>
-    </Grid>
+      <Box
+        mt={2}
+        sx={{
+          flex: "0 0 10vh",
+        }}
+      >
+        <Button
+          onClick={handleConfirmClick}
+          sx={{
+            background: "linear-gradient(to right, #FFC371, #FF5F6D)",
+            color: "text.primary",
+            fontWeight: 700,
+            "&:hover": {
+              boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
+            },
+          }}
+        >
+          CONFIRM
+        </Button>
+      </Box>
+    </Container>
   );
 }
