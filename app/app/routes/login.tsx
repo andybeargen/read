@@ -5,11 +5,13 @@ import {
   Grid,
   Link,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
+import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import { useEffect, useState } from "react";
+import { AuthorizationError } from "remix-auth";
 import { LoginCardLayout } from "~/components/LoginCardLayout";
 import { authenticator } from "~/utils/auth.server";
 import { commitSession, getSession } from "~/utils/sessions.server";
@@ -40,32 +42,56 @@ export const loader: LoaderFunction = async ({ request }) => {
  * Called when the user submits the login form
  */
 export const action: ActionFunction = async ({ request, context }) => {
-  return await authenticator.authenticate("email-pass", request, {
-    successRedirect: "/dashboard",
-    failureRedirect: "/login",
-    // throwOnError: true,
-    context,
-  });
+  try {
+    return await authenticator.authenticate("email-pass", request, {
+      successRedirect: "/dashboard",
+      throwOnError: true,
+      context,
+    });
+  } catch (e) {
+    if (e instanceof Response) {
+      return e;
+    }
+
+    if (e instanceof AuthorizationError) {
+      return {
+        error: { message: e.message },
+      };
+    }
+
+    return {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        error: {
+          message: "An error occurred",
+        },
+      }),
+    };
+  }
 };
 
 export default function Login() {
   const actionData = useActionData<typeof loader>();
+  const [clicked, setClicked] = useState(false);
+
+  useEffect(() => {
+    if (actionData) {
+      setClicked(false);
+    }
+  }, [actionData]);
 
   return (
     <LoginCardLayout>
-      <Typography
-        component="h1"
-        variant="h3"
-        style={{ textAlign: "center" }}
-      >
+      <Typography component="h1" variant="h3" style={{ textAlign: "center" }}>
         Welcome to LitCritters
       </Typography>
 
-      {actionData?.error ? (
-        <p>ERROR: {actionData?.error?.message}</p>
-      ) : null}
+      {actionData?.error ? <p>{actionData?.error?.message}</p> : null}
 
-      <Form action="/login" method="post">
+      <Form action="/login" method="post" onSubmit={() => setClicked(true)}>
         <TextField
           margin="normal"
           required
@@ -86,6 +112,7 @@ export default function Login() {
           autoComplete="current-password"
         />
         <FormControlLabel
+          name="remember"
           control={<Checkbox value="remember" color="primary" />}
           label="Remember me"
         />
@@ -94,13 +121,14 @@ export default function Login() {
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
+          disabled={clicked}
         >
-          Sign In
+          {clicked ? "Logging in..." : "Log In"}
         </Button>
         <Grid container justifyContent="center">
           <Grid item>
             {"Don't have an account? "}
-            <Link href="/register" variant="body2">
+            <Link href="/register" variant="body2" color="secondary">
               {"Sign Up"}
             </Link>
           </Grid>

@@ -11,11 +11,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function LogoutRoute() {
   return (
     <LoginCardLayout>
-      <Typography
-        component="h1"
-        variant="h3"
-        style={{ textAlign: "center" }}
-      >
+      <Typography component="h1" variant="h3" style={{ textAlign: "center" }}>
         Are you sure you want to logout?
       </Typography>
       <Form method="post" action="/logout">

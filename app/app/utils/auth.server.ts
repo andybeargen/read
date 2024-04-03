@@ -44,15 +44,22 @@ authenticator.use(
 
     if (!email.includes("@")) throw new AuthorizationError("Invalid email");
 
+    let user: User | null = null;
     // fetch the user from the database
-    const user = await loginUser(email.toString(), password.toString());
 
-    if (user instanceof Error)
+    try {
+      // the type of this user must match the type you pass to the Authenticator
+      // the strategy will automatically inherit the type if you instantiate
+      // directly inside the `use` method
+      user = await loginUser(email.toString(), password.toString());
+    } catch (e) {
+      throw new AuthorizationError("Error logging in. Please try again.");
+    }
+
+    if (user === null) {
       throw new AuthorizationError("Incorrect email/password");
+    }
 
-    // the type of this user must match the type you pass to the Authenticator
-    // the strategy will automatically inherit the type if you instantiate
-    // directly inside the `use` method
     return user;
   }),
   // each strategy has a name and can be changed to use another one
@@ -82,24 +89,30 @@ authenticator.use(
     if (!email.includes("@")) throw new AuthorizationError("Invalid email");
 
     // fetch the user from the database
-    const user = await createUser(
+    return await createUser(
       username.toString(),
       email.toString(),
       password.toString(),
-    );
+    ).then((user) => {
+      if (user instanceof Error) {
+        throw new AuthorizationError("User already exists");
+      }
 
-    if (user instanceof Error)
-      throw new AuthorizationError("User already exists");
+      if (user === null || user === undefined || Object.keys(user).length === 0) {
+        throw new AuthorizationError("Error creating user");
+      }
 
-    if (user) {
-      const critter = await hatchCritter(user.id);
-      console.log(critter);
-    }
+      if (user) {
+        const critter = hatchCritter(user.id);
+        console.log(critter);
+      }
 
-    // the type of this user must match the type you pass to the Authenticator
-    // the strategy will automatically inherit the type if you instantiate
-    // directly inside the `use` method
-    return user;
+      // the type of this user must match the type you pass to the Authenticator
+      // the strategy will automatically inherit the type if you instantiate
+      // directly inside the `use` method
+      return user;
+    });
+
   }),
   // each strategy has a name and can be changed to use another one
   // same strategy multiple times, especially useful for the OAuth2 strategy.

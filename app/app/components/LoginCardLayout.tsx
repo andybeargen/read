@@ -1,44 +1,45 @@
-import {
-    Box,
-    Card,
-    Container
-} from "@mui/material";
+import { Box, Card, Container } from "@mui/material";
 
 /**
  * Contains the layout for the login card
  */
-export const LoginCardLayout = ({ children }: { children: React.ReactNode }) => {
-    return (
-      <Box
+export const LoginCardLayout = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        background:
+          "linear-gradient(45deg, #285cc455, #de7d3755), linear-gradient(#fffe, #fffe), url(/background.png) center center / 75% repeat",
+      }}
+    >
+      <Container
+        component="main"
+        maxWidth="xs"
         sx={{
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
           alignItems: "center",
-          height: "100vh",
-          background: "linear-gradient(45deg, #285cc455, #de7d3755), linear-gradient(#fffe, #fffe), url(/background.png) center center / 75% repeat",
+          justifyContent: "center",
         }}
       >
-        <Container
-          component="main"
-          maxWidth="xs"
+        <Card
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center",
+            padding: 4,
           }}
         >
-          <Card
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              padding: 4,
-            }}
-          >
-            { children }
-          </Card>
-        </Container>
-      </Box>
-    );
-  }
+          {children}
+        </Card>
+      </Container>
+    </Box>
+  );
+};
