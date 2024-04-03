@@ -98,7 +98,7 @@ export default function HatcheryRoute() {
           >
             You hatched a
           </Typography>
-          <img src={`/critters/${hatchedCritter.image}`} alt="critter" />
+          <img src={`/critters/${hatchedCritter.image}`} alt={hatchedCritter.name} />
           <Typography
             variant="h1"
             component="h1"
