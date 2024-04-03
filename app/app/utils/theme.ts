@@ -18,7 +18,7 @@ export const CrittersTheme = createTheme({
       "Cantarell",
       "Fira Sans",
       "Droid Sans",
-      "sans-serif"
+      "sans-serif",
     ].join(","),
     h1: {
       fontSize: "2.5rem",

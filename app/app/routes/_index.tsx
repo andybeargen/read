@@ -49,16 +49,15 @@ export default function Index() {
       </Container>
 
       <Typography component="h5" variant="h5" textAlign="center" gutterBottom>
-        Where reading lit books gets you the Littist of Critters. Just upload a
-        epub and read away!
+        Where reading lit books gets you the Littiest of Critters. Just upload
+        your books and read away!
       </Typography>
 
       <Box
-        mt={3}
-        mb={2}
         sx={{
           display: "flex",
           gap: "2rem",
+          my: 4,
         }}
       >
         <Button variant="contained" component={Link} to="/login">

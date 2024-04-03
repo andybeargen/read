@@ -8,6 +8,7 @@ import { authenticator } from "~/utils/auth.server";
 import {
   Box,
   Button,
+  Card,
   Checkbox,
   Container,
   FormControlLabel,
@@ -55,67 +56,88 @@ export default function Login() {
   const actionData = useActionData<typeof loader>();
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        background: "linear-gradient(45deg, rgba(40, 92, 196, 0.38) 30%, rgba(222, 125, 55, 0.52) 90%), url(/background.png) center center / 75% repeat",
+      }}
+    >
+      <Container
+        component="main"
+        maxWidth="xs"
         sx={{
-          marginTop: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <Typography component="h1" variant="h3" style={{ textAlign: "center" }}>
-          Welcome to LitCritters
-        </Typography>
-
-        {actionData?.error ? <p>ERROR: {actionData?.error?.message}</p> : null}
-
-        <Form action="/login" method="post">
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+        <Card
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            padding: 4,
+          }}
+        >
+          <Typography
+            component="h1"
+            variant="h3"
+            style={{ textAlign: "center" }}
           >
-            Sign In
-          </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
+            Welcome to LitCritters
+          </Typography>
+
+          {actionData?.error ? (
+            <p>ERROR: {actionData?.error?.message}</p>
+          ) : null}
+
+          <Form action="/login" method="post">
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In
+            </Button>
+            <Grid container justifyContent="center">
+              <Grid item>
+                {"Don't have an account? "}
+                <Link href="/register" variant="body2">
+                  {"Sign Up"}
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Link href="/register" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
-        </Form>
-      </Box>
-    </Container>
+          </Form>
+        </Card>
+      </Container>
+    </Box>
   );
 }
