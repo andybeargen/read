@@ -1,13 +1,14 @@
 import { LoaderFunction } from "@remix-run/node";
 import { AuthenticatedLayout } from "~/components/AuthenticatedLayout";
 import { authenticator } from "~/utils/auth.server";
-import { getUserCritters } from "~/models/critter.server";
+import { UserCritter, getUserCritters } from "~/models/critter.server";
 import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { AppBar, Box, Button, Card, CardContent, Container, Grid, IconButton, InputBase, Typography, styled } from "@mui/material";
 import { Search as SearchIcon, ArrowBack as BackIcon } from "@mui/icons-material";
 import { useState } from "react";
 import { CoinIcon } from "~/components";
+import { prisma } from "~/db.server";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -68,6 +69,7 @@ export default function CollectionRoute() {
   const { critters, user } = useLoaderData<typeof loader>();
   const [searchItem, setSearchItem] = useState("");
   const [currentCritter, setCurrentCritter] = useState(null);
+  const [coins, setCoins] = useState(user.coins);
 
   const handleInputChange = (e: { target: { value: any } }) => {
     const searchTerm = e.target.value;
@@ -78,6 +80,31 @@ export default function CollectionRoute() {
     return critters.filter((critter: any) => 
       critter.critter.name.toLowerCase().includes(searchItem.toLowerCase())
     );
+  }
+  
+  async function levelUpCritterAndNotify(critter: any) {
+    if (!user || user.coins < 100) {
+      alert("Insufficient amount of coins to level up critter");
+      return;
+    }
+
+    const response = await fetch("http://localhost:3000/api/levelup", {
+      method: "POST",
+      headers: {
+      "Content-Type": "application/json",
+      },
+      body: JSON.stringify({userCritterId: critter.id})
+    });
+    const responseJson = await response.json();
+    const error = responseJson?.error;
+
+    if (!response.ok || error) {
+      alert(error);
+    } else {
+      critter.level += 1;
+      user.coins -= 100;
+      setCoins(user.coins);
+    }
   }
 
   return (
@@ -204,13 +231,13 @@ export default function CollectionRoute() {
                 <BackIcon sx={{ height: "100%", position: "relative", fill: "#0045bd", transform: "scale(1.8)" }} />
               </IconButton>
 
-              <CoinCount count={user.coins} />
+              <CoinCount count={coins} />
             </Container>
 
             <img
               src={`/critters/${currentCritter.critter.image}`}
               alt="critter"
-              style={{ maxWidth: "300px", marginTop: "7%" }}
+              style={{ height: "256px", marginTop: "7%" }}
             />
             <Typography
               variant="h3"
@@ -218,7 +245,7 @@ export default function CollectionRoute() {
               fontFamily={"monospace"}
               fontWeight={"bold"}
               color={"#0045bd"}
-              sx={{marginTop: "5rem", marginBottom: "1rem"}}
+              sx={{marginTop: "5rem", marginBottom: "10%"}}
             >
               {currentCritter.critter.name}
             </Typography>
@@ -241,6 +268,29 @@ export default function CollectionRoute() {
             >
               Level: {currentCritter.level}
             </Typography>
+            <div onClick={() => levelUpCritterAndNotify(currentCritter)} style={{width: "100%", display: "flex", justifyContent: "center"}}>
+              <Box
+                  bgcolor={"#D9F4FF"}
+                  fontSize={"2em"}
+                  gap={2}
+                  alignItems={"center"}
+                  display={"flex"}
+                  flexDirection={"row"}
+                  justifyContent={"center"}
+                  width={"80%"}
+                  height={"80px"}
+                  borderRadius={"50px"}
+                  border={"2px solid #E89B60"}
+                  color={"#0045bd"}
+                  mb={2}
+                  sx={{ "&:hover": { backgroundColor: "#001e6b", color: "white" } }}
+                >
+                  <Typography variant="h4" component="h1" fontFamily={"monospace"} textTransform={"uppercase"}>
+                    Level Up 100
+                  </Typography>
+                  <CoinIcon style={{ width: "40px", marginTop: "-5px" }} />
+              </Box>
+            </div>
             <Typography
               variant="h5"
               component="h1"
@@ -272,7 +322,16 @@ export const loader: LoaderFunction = async ({ request }) => {
     redirect("/");
     return null;
   }
- // get all the user's critters
+  const userData = await prisma.user.findUnique({
+    where: {
+      id: user.id,
+    },
+  });
+  if (!userData || userData instanceof Error) {
+    redirect("/");
+    return null;
+  }
+  // get all the user's critters
   const critters = await getUserCritters(user.id);
-  return { critters, user };
+  return { critters, user: userData };
 };
