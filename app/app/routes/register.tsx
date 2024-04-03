@@ -1,6 +1,13 @@
-import { Typography } from "@mui/material";
+import {
+  Button,
+  Grid,
+  Link,
+  TextField,
+  Typography
+} from "@mui/material";
 import { ActionFunctionArgs, LoaderFunction, json } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useActionData } from "@remix-run/react";
+import { LoginCardLayout } from "~/components/LoginCardLayout";
 import { authenticator } from "~/utils/auth.server";
 import { commitSession, getSession } from "~/utils/sessions.server";
 
@@ -33,28 +40,67 @@ export async function action({ request, context }: ActionFunctionArgs) {
 }
 
 export default function Register() {
-  const loaderData = useLoaderData<typeof loader>();
+  const actionData = useActionData<typeof loader>();
 
   return (
-    <>
-      <Typography component="h1" variant="h1">
-        Register
+    <LoginCardLayout>
+      <Typography
+        component="h1"
+        variant="h3"
+        style={{ textAlign: "center" }}
+      >
+        Welcome to LitCritters
       </Typography>
 
-      {loaderData?.error ? <p>ERROR: {loaderData?.error?.message}</p> : null}
+      {actionData?.error ? (
+        <p>ERROR: {actionData?.error?.message}</p>
+      ) : null}
 
-      <Form method="post" action="/register">
-        <label>
-          Username: <input type="text" name="username" />
-        </label>
-        <label>
-          Email: <input type="email" name="email" />
-        </label>
-        <label>
-          Password: <input type="password" name="password" />
-        </label>
-        <button type="submit">Register</button>
+      <Form action="/login" method="post">
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="email"
+          label="Email Address"
+          name="email"
+          autoComplete="email"
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="username"
+          label="Username"
+          name="username"
+          autoComplete="email"
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+        >
+          Register
+        </Button>
+        <Grid container justifyContent="center">
+          <Grid item>
+            {"Already have an account? "}
+            <Link href="/login" variant="body2">
+              {"Sign In"}
+            </Link>
+          </Grid>
+        </Grid>
       </Form>
-    </>
+    </LoginCardLayout>
   );
 }
