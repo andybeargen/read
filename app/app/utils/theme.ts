@@ -13,6 +13,13 @@ export const CrittersTheme = createTheme({
     },
   },
   typography: {
+    fontFamily: [
+      "Ubuntu",
+      "Cantarell",
+      "Fira Sans",
+      "Droid Sans",
+      "sans-serif"
+    ].join(","),
     h1: {
       fontSize: "2.5rem",
       fontWeight: 500,
@@ -48,6 +55,18 @@ export const CrittersTheme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: "1.25em",
+          textTransform: "none",
+        },
+      },
+    },
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          backgroundImage:
+            'linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url("/paper_texture.jpg")',
+          backgroundRepeat: "repeat",
+          backgroundAttachment: "fixed",
+          minHeight: "100vh",
         },
       },
     },

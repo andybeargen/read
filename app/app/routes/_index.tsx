@@ -25,10 +25,6 @@ export default function Index() {
     <Box
       className="index-page-box"
       sx={{
-        backgroundImage:
-          'linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url("/paper_texture.jpg")',
-        backgroundRepeat: "repeat",
-        backgroundAttachment: "fixed",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
