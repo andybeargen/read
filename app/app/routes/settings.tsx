@@ -61,7 +61,15 @@ export default function SettingsRoute() {
 
   return (
     <AuthenticatedLayout>
-      <Container sx={{ py: 4 }}>
+      <Container
+        sx={{
+          py: 4,
+          maxWidth: "sm",
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+        }}
+      >
         <Typography sx={{ textAlign: "center" }} variant="h1">
           Settings
         </Typography>
@@ -69,57 +77,76 @@ export default function SettingsRoute() {
           Change your personal information. Change your password. Change your
           email. Change your username. Change your life.
         </Typography>
-      </Container>
 
-      {actionData?.error ? <p>ERROR: {actionData?.error}</p> : null}
+        {actionData?.error ? <p>ERROR: {actionData?.error}</p> : null}
 
-      <Box
-        component={Form}
-        method="post"
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          padding: 2,
-        }}
-      >
-        <TextField
-          fullWidth
-          label="Email"
-          type="email"
-          id="email"
-          autoComplete="email"
-          name="email"
-        />
-        <TextField
-          fullWidth
-          label="Old Password"
-          type="password"
-          required
-          id="oldPassword"
-          name="oldPassword"
-        />
-        <TextField
-          fullWidth
-          label="New Password"
-          type="password"
-          id="newPassword"
-          name="newPassword"
-        />
-        <TextField
-          fullWidth
-          label="Confirm New Password"
-          type="password"
-          id="confirmNewPassword"
-          name="confirmNewPassword"
-        />
-
-        <Box sx={{ textAlign: "center", mt: 2 }}>
-          <Button type="submit" variant="contained" color="primary">
-            Save Changes
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            padding: 2,
+          }}
+        >
+          <Typography variant="h4" component="h2">
+            Log out
+          </Typography>
+          <Button variant="contained" color="secondary" href="/logout">
+            Log out
           </Button>
         </Box>
-      </Box>
+
+        <Box
+          component={Form}
+          method="post"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            padding: 2,
+          }}
+        >
+          <Typography variant="h4" component="h2">
+            Change Password
+          </Typography>
+          <TextField
+            fullWidth
+            label="Email"
+            type="email"
+            id="email"
+            autoComplete="email"
+            name="email"
+          />
+          <TextField
+            fullWidth
+            label="Old Password"
+            type="password"
+            required
+            id="oldPassword"
+            name="oldPassword"
+          />
+          <TextField
+            fullWidth
+            label="New Password"
+            type="password"
+            id="newPassword"
+            name="newPassword"
+          />
+          <TextField
+            fullWidth
+            label="Confirm New Password"
+            type="password"
+            id="confirmNewPassword"
+            name="confirmNewPassword"
+          />
+
+          <Box sx={{ textAlign: "center", mt: 2 }}>
+            <Button type="submit" variant="contained" color="primary">
+              Save Changes
+            </Button>
+          </Box>
+        </Box>
+      </Container>
     </AuthenticatedLayout>
   );
 }

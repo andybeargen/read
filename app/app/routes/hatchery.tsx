@@ -98,7 +98,7 @@ export default function HatcheryRoute() {
           >
             You hatched a
           </Typography>
-          <img src={`/critters/${hatchedCritter.image}`} alt="critter" />
+          <img src={`/critters/${hatchedCritter.image}`} alt={hatchedCritter.name} />
           <Typography
             variant="h1"
             component="h1"
@@ -163,7 +163,7 @@ export default function HatcheryRoute() {
           >
             Hatchery
           </Typography>
-          <img src={`/Egg.png`} alt="critter" />
+          <img src={`/Egg.png`} alt="An unhatched egg" />
           <div
             onClick={hatchCritterAndNotify}
             style={{ width: "100%", display: "flex", justifyContent: "center" }}
