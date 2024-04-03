@@ -159,7 +159,7 @@ export default function Library() {
               variant="h4"
               style={{ wordWrap: "break-word" }}
               color="#0c174b"
-              padding="30px 0px 0px 0px"
+              padding="30px 0 0 0"
             >
               Library
             </Typography>
