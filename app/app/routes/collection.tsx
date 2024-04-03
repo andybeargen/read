@@ -99,25 +99,24 @@ export default function CollectionRoute() {
         </Box>
       </AppBar>
 
-      <Grid container spacing={2} justifyContent='left' alignItems='flex-start' sx={{ paddingX: '30%', paddingTop: '3rem' }}>
+      <Grid container spacing={2} justifyContent='left' alignItems='flex-start' sx={{ paddingX: '30%', paddingTop: '3rem', paddingBottom: '7rem' }}>
         {getFilteredCritters(critters).map((critter) => (
           <Grid item xs={12} sm={6} md={4} key={critter.id}>
             <Card sx={{ 
               border: '1px solid #de7d37', 
               boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)', 
               borderRadius: '15px',
-              padding: '1rem',
               backgroundImage: 'linear-gradient(to right, #FFCC80, #80D8FF)'
             }}>
-              <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <img 
-                    src={`/critters/${critter.critter.image}`} 
-                    alt={critter.critter.name} 
-                    style={{ maxWidth: '160px', maxHeight: '160px' }}
-                  />
-                </Box>
-                <Typography variant="h3" sx={{ mt: 4, color: '#0c174b' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', paddingY: '1rem', height: '160px' }}>
+                <img 
+                  src={`/critters/${critter.critter.image}`} 
+                  alt={critter.critter.name} 
+                  style={{ maxWidth: '160px', maxHeight: '160px' }}
+                />
+              </Box>
+              <CardContent sx={{backgroundColor: '#fff'}}>
+                <Typography variant="h3" sx={{ mt: 1, color: '#0c174b' }}>
                   {critter.critter.name}
                 </Typography>
                 <Typography variant="h6" sx={{ mt: 1 }}>
