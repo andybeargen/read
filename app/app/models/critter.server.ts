@@ -16,7 +16,7 @@ export async function updateCritter(
   name: Critter["name"],
   description: Critter["description"],
   type: Critter["type"],
-  image: Critter["image"]
+  image: Critter["image"],
 ) {
   return prisma.critter.update({
     where: {
@@ -33,7 +33,7 @@ export async function updateCritter(
 
 export async function assignCritterToUser(
   userId: User["id"],
-  critterId: Critter["id"]
+  critterId: Critter["id"],
 ) {
   return prisma.userCritter.create({
     data: {
@@ -54,17 +54,19 @@ export async function getUserCritters(userId: User["id"]) {
   });
 }
 
-/** 
+/**
  * Creates a new UserCritter and assigns it to the user with id of userId.
  * @constructor
  * @param {User["id"]} userId - The id of the user who is hatching a critter.
  * */
-export async function hatchCritter(userId: User["id"]): Promise<Critter | null> {
+export async function hatchCritter(
+  userId: User["id"],
+): Promise<Critter | null> {
   let critterName: Critter["name"] = getRandomCritter();
   let critter: Critter | null = await prisma.critter.findUnique({
     where: {
       name: critterName,
-    }
+    },
   });
 
   if (critter) {

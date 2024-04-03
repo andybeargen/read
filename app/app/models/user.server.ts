@@ -74,7 +74,7 @@ export async function addCoins(id: User["id"], amount: User["coins"]) {
   const user = await prisma.user.findUnique({
     where: {
       id: id,
-    }
+    },
   });
 
   if (!user) return;
@@ -85,9 +85,9 @@ export async function addCoins(id: User["id"], amount: User["coins"]) {
     },
     data: {
       coins: {
-        increment: amount
-      }
-    }
+        increment: amount,
+      },
+    },
   });
 }
 
@@ -95,7 +95,7 @@ export async function removeCoins(id: User["id"], amount: User["coins"]) {
   const user = await prisma.user.findUnique({
     where: {
       id: id,
-    }
+    },
   });
 
   if (!user) return;
@@ -105,7 +105,7 @@ export async function removeCoins(id: User["id"], amount: User["coins"]) {
       id: id,
     },
     data: {
-      coins: (user.coins - amount < 0) ? 0 : user.coins - amount, 
-    }
+      coins: user.coins - amount < 0 ? 0 : user.coins - amount,
+    },
   });
 }

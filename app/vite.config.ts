@@ -22,11 +22,11 @@ export default defineConfig({
     chunkSizeWarningLimit: 100,
     rollupOptions: {
       onwarn(warning, warn) {
-        if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
-          return
+        if (warning.code === "MODULE_LEVEL_DIRECTIVE") {
+          return;
         }
-        warn(warning)
-      }
+        warn(warning);
+      },
     },
   },
 

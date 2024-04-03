@@ -1,11 +1,11 @@
-import * as ReactDOMServer from 'react-dom/server';
-import { RemixServer } from '@remix-run/react';
-import type { EntryContext } from '@remix-run/node';
-import createEmotionCache from './utils/createEmotionCache';
-import { CssBaseline, ThemeProvider } from '@mui/material';
-import { CacheProvider } from '@emotion/react';
-import createEmotionServer from '@emotion/server/create-instance';
-import { CrittersTheme } from './utils/theme';
+import * as ReactDOMServer from "react-dom/server";
+import { RemixServer } from "@remix-run/react";
+import type { EntryContext } from "@remix-run/node";
+import createEmotionCache from "./utils/createEmotionCache";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { CacheProvider } from "@emotion/react";
+import createEmotionServer from "@emotion/server/create-instance";
+import { CrittersTheme } from "./utils/theme";
 
 export default function handleRequest(
   request: Request,
@@ -34,10 +34,10 @@ export default function handleRequest(
   // Grab the CSS from emotion
   const { styles } = extractCriticalToChunks(html);
 
-  let stylesHTML = '';
+  let stylesHTML = "";
 
   styles.forEach(({ key, ids, css }) => {
-    const emotionKey = `${key} ${ids.join(' ')}`;
+    const emotionKey = `${key} ${ids.join(" ")}`;
     const newStyleTag = `<style data-emotion="${emotionKey}">${css}</style>`;
     stylesHTML = `${stylesHTML}${newStyleTag}`;
   });
@@ -48,7 +48,7 @@ export default function handleRequest(
     `<meta name="emotion-insertion-point" content="emotion-insertion-point"/>${stylesHTML}`,
   );
 
-  responseHeaders.set('Content-Type', 'text/html');
+  responseHeaders.set("Content-Type", "text/html");
 
   return new Response(`<!DOCTYPE html>${markup}`, {
     status: responseStatusCode,

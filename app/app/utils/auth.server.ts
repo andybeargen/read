@@ -8,7 +8,12 @@ import { User } from "@prisma/client";
 import { FormStrategy } from "remix-auth-form";
 
 import { createUser, loginUser, updatePassword } from "~/models/user.server";
-import { createCritter, assignCritterToUser, getRandomCritter, hatchCritter } from "~/models/critter.server";
+import {
+  createCritter,
+  assignCritterToUser,
+  getRandomCritter,
+  hatchCritter,
+} from "~/models/critter.server";
 
 // Create an instance of the authenticator, pass a generic with what
 // strategies will return and will store in the session
@@ -134,7 +139,7 @@ authenticator.use(
     const user = await loginUser(email.toString(), oldPassword.toString());
 
     if (user instanceof Error)
-    throw new AuthorizationError("Incorrect email/password");
+      throw new AuthorizationError("Incorrect email/password");
 
     // update the user's password
     if (user) {
@@ -145,6 +150,6 @@ authenticator.use(
     // the strategy will automatically inherit the type if you instantiate
     // directly inside the `use` method
     return user;
-  }
-  ), "change-password"
+  }),
+  "change-password",
 );
