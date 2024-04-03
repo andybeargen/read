@@ -1,6 +1,12 @@
 import * as React from "react";
 import { useState } from "react";
-import { Form, Link, useActionData, useLoaderData, useSubmit } from "@remix-run/react";
+import {
+  Form,
+  Link,
+  useActionData,
+  useLoaderData,
+  useSubmit,
+} from "@remix-run/react";
 import {
   Button,
   Typography,
@@ -19,7 +25,12 @@ import { AuthenticatedLayout } from "~/components";
 import { authenticator } from "~/utils/auth.server";
 import { Search as SearchIcon, CloudUpload } from "@mui/icons-material";
 import { getSession, commitSession } from "../utils/sessions.server";
-import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  json,
+  redirect,
+} from "@remix-run/node";
 import { createBook, getUserLibrary } from "~/models/book.server";
 import { parseEpub } from "~/utils/epub";
 import { prisma } from "~/db.server";
@@ -35,7 +46,7 @@ export async function action({ request }: ActionFunctionArgs) {
     return {};
   }
   let epubFile = body.get("file") as File;
-  
+
   // reject an epub of over 100mb
   if (epubFile.size > 100000000) {
     return {};
@@ -46,7 +57,10 @@ export async function action({ request }: ActionFunctionArgs) {
   } else if (epubFile) {
     try {
       let epubInfo = await parseEpub(epubFile);
-      let bookData = {...epubInfo, user: {connect: {id: user.id as string}}};
+      let bookData = {
+        ...epubInfo,
+        user: { connect: { id: user.id as string } },
+      };
       let book = await createBook(bookData);
     } catch (e) {
       return {};
@@ -93,15 +107,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
   height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
+  overflow: "hidden",
+  position: "absolute",
   bottom: 0,
   left: 0,
-  whiteSpace: 'nowrap',
+  whiteSpace: "nowrap",
   width: 1,
 });
 
@@ -118,10 +132,12 @@ export default function Library() {
   };
 
   const getFilteredBooks = (books: any) => {
-    return books.filter((book: any) => 
-      book.title.toLowerCase().includes(searchItem.toLowerCase()) ||
-      book.author.toLowerCase().includes(searchItem.toLowerCase()));
-  }
+    return books.filter(
+      (book: any) =>
+        book.title.toLowerCase().includes(searchItem.toLowerCase()) ||
+        book.author.toLowerCase().includes(searchItem.toLowerCase()),
+    );
+  };
 
   return (
     <AuthenticatedLayout>
@@ -175,10 +191,14 @@ export default function Library() {
           alignItems: "right",
         }}
       >
-        <Form onChange={(event) => {
-          submit(event.currentTarget)
-          }} 
-          action="/library" method="post" encType="multipart/form-data">
+        <Form
+          onChange={(event) => {
+            submit(event.currentTarget);
+          }}
+          action="/library"
+          method="post"
+          encType="multipart/form-data"
+        >
           <Button
             component="label"
             role={undefined}
@@ -187,11 +207,11 @@ export default function Library() {
             startIcon={<CloudUpload />}
           >
             Upload Book
-            <VisuallyHiddenInput name="file" type="file" accept=".epub"/>
+            <VisuallyHiddenInput name="file" type="file" accept=".epub" />
           </Button>
         </Form>
       </Box>
-        
+
       <Box
         sx={{
           flexGrow: 1,
@@ -207,17 +227,17 @@ export default function Library() {
             {getFilteredBooks(books).map((book) => (
               <Grid key={book.id} item>
                 <BookCard
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      backgroundImage: `url(${book.image})`,
-                      backgroundPosition: "center center",
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: 155,
-                    }}
-                    component={Link}
-                    to={`/book/${book.id}`}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundImage: `url(${book.image})`,
+                    backgroundPosition: "center center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: 155,
+                  }}
+                  component={Link}
+                  to={`/book/${book.id}`}
                 />
                 <Box
                   sx={{
@@ -264,12 +284,12 @@ export const loader: LoaderFunction = async ({ request }) => {
     // get books
     let books: any = user.id != undefined ? await getUserLibrary(user.id) : [];
     books.forEach((book: any) => {
-        if (book.image) {
-          book.image = "data:image/jpeg;base64," + book.image.toString('base64');
-        } else {
-          book.image = "";
-        }
-    })
+      if (book.image) {
+        book.image = "data:image/jpeg;base64," + book.image.toString("base64");
+      } else {
+        book.image = "";
+      }
+    });
 
     // check if user has no critters, if they don't redirect to /select-critter
     const userData = await prisma.user.findUnique({
@@ -288,4 +308,4 @@ export const loader: LoaderFunction = async ({ request }) => {
       { books }
     );
   }
-}
+};

@@ -8,42 +8,55 @@ import { CacheProvider } from "@emotion/react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import { RemixBrowser } from "@remix-run/react";
-import { startTransition, StrictMode, useState } from "react";
-import ClientStyleContext from "~/contexts/ClientStyleContext";
-import { CrittersTheme } from "./utils/theme.client";
-import createEmotionCache from "@emotion/cache";
+import { startTransition, StrictMode, useMemo, useState } from "react";
 import { hydrateRoot } from "react-dom/client";
+import ClientStyleContext from "./contexts/ClientStyleContext";
+import createEmotionCache from "./utils/createEmotionCache";
+import { CrittersTheme } from "./utils/theme";
 
 interface ClientCacheProviderProps {
   children: React.ReactNode;
 }
 
-// https://github.com/mui/material-ui/issues/30436#issuecomment-1003339715
 function ClientCacheProvider({ children }: ClientCacheProviderProps) {
-  const [cache, setCache] = useState(createEmotionCache({ key: "css" }));
+  const [cache, setCache] = useState(createEmotionCache());
 
-  function reset() {
-    setCache(createEmotionCache({ key: "css" }));
-  }
+  const clientStyleContextValue = useMemo(
+    () => ({
+      reset() {
+        setCache(createEmotionCache());
+      },
+    }),
+    [],
+  );
 
   return (
-    <ClientStyleContext.Provider value={{ reset }}>
+    <ClientStyleContext.Provider value={clientStyleContextValue}>
       <CacheProvider value={cache}>{children}</CacheProvider>
     </ClientStyleContext.Provider>
   );
 }
 
-startTransition(() => {
-  hydrateRoot(
-    document,
-    <StrictMode>
-      <ClientCacheProvider>
-        <ThemeProvider theme={CrittersTheme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
-          <RemixBrowser />
-        </ThemeProvider>
-      </ClientCacheProvider>
-    </StrictMode>,
-  );
-});
+const hydrate = () =>
+  startTransition(() => {
+    hydrateRoot(
+      document,
+      <StrictMode>
+        <ClientCacheProvider>
+          <ThemeProvider theme={CrittersTheme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            <RemixBrowser />
+          </ThemeProvider>
+        </ClientCacheProvider>
+      </StrictMode>,
+    );
+  });
+
+if (window.requestIdleCallback) {
+  window.requestIdleCallback(hydrate);
+} else {
+  // Safari doesn't support requestIdleCallback
+  // https://caniuse.com/requestidlecallback
+  setTimeout(hydrate, 1);
+}

@@ -15,14 +15,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userData = await prisma.user.findUnique({
     where: {
       id: user.id,
-    }
+    },
   });
   if (!userData || userData instanceof Error) {
     return redirect("/");
   }
 
   if (userData.coins < 500) {
-    return json({ error: "Insufficient amount of coins to hatch critter" })
+    return json({ error: "Insufficient amount of coins to hatch critter" });
   }
 
   let critter = await hatchCritter(userData.id);
@@ -30,5 +30,5 @@ export async function loader({ request }: LoaderFunctionArgs) {
     await removeCoins(userData.id, 500);
     return json({ critter });
   }
-  return json({ error: "Unable to hatch critter"});
+  return json({ error: "Unable to hatch critter" });
 }
