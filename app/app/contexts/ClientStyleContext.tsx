@@ -1,4 +1,4 @@
-// https://github.com/mui/material-ui/issues/30436#issuecomment-1003339715
+// https://github.com/mui/material-ui/blob/master/examples/material-ui-remix-ts/app/src/ClientStyleContext.tsx
 
 import { createContext } from "react";
 

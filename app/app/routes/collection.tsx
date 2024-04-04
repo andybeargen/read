@@ -307,7 +307,6 @@ export default function CollectionRoute() {
           </Container>
         </>)
       }
-      
     </AuthenticatedLayout>
   );
 }
@@ -331,6 +330,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     redirect("/");
     return null;
   }
+
   // get all the user's critters
   const critters = await getUserCritters(user.id);
   return { critters, user: userData };

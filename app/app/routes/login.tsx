@@ -1,21 +1,20 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
-
-import { commitSession, getSession } from "~/utils/sessions.server";
-import { authenticator } from "~/utils/auth.server";
-
 import {
-  Box,
   Button,
   Checkbox,
-  Container,
   FormControlLabel,
   Grid,
   Link,
   TextField,
   Typography,
 } from "@mui/material";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import { useEffect, useState } from "react";
+import { AuthorizationError } from "remix-auth";
+import { LoginCardLayout } from "~/components/LoginCardLayout";
+import { authenticator } from "~/utils/auth.server";
+import { commitSession, getSession } from "~/utils/sessions.server";
 
 /**
  * Called when the user visits the login page
@@ -43,79 +42,98 @@ export const loader: LoaderFunction = async ({ request }) => {
  * Called when the user submits the login form
  */
 export const action: ActionFunction = async ({ request, context }) => {
-  return await authenticator.authenticate("email-pass", request, {
-    successRedirect: "/dashboard",
-    failureRedirect: "/login",
-    // throwOnError: true,
-    context,
-  });
+  try {
+    return await authenticator.authenticate("email-pass", request, {
+      successRedirect: "/dashboard",
+      throwOnError: true,
+      context,
+    });
+  } catch (e) {
+    if (e instanceof Response) {
+      return e;
+    }
+
+    if (e instanceof AuthorizationError) {
+      return {
+        error: { message: e.message },
+      };
+    }
+
+    return {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        error: {
+          message: "An error occurred",
+        },
+      }),
+    };
+  }
 };
 
 export default function Login() {
   const actionData = useActionData<typeof loader>();
+  const [clicked, setClicked] = useState(false);
+
+  useEffect(() => {
+    if (actionData) {
+      setClicked(false);
+    }
+  }, [actionData]);
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Typography component="h1" variant="h3" style={{ textAlign: "center" }}>
-          Welcome to LitCritters
-        </Typography>
+    <LoginCardLayout>
+      <Typography component="h1" variant="h3" style={{ textAlign: "center" }}>
+        Welcome to LitCritters
+      </Typography>
 
-        {actionData?.error ? <p>ERROR: {actionData?.error?.message}</p> : null}
+      {actionData?.error ? <p>{actionData?.error?.message}</p> : null}
 
-        <Form action="/login" method="post">
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Sign In
-          </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="/register" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
+      <Form action="/login" method="post" onSubmit={() => setClicked(true)}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="email"
+          label="Email Address"
+          name="email"
+          autoComplete="email"
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+          autoComplete="current-password"
+        />
+        <FormControlLabel
+          name="remember"
+          control={<Checkbox value="remember" color="primary" />}
+          label="Remember me"
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+          disabled={clicked}
+        >
+          {clicked ? "Logging in..." : "Log In"}
+        </Button>
+        <Grid container justifyContent="center">
+          <Grid item>
+            {"Don't have an account? "}
+            <Link href="/register" variant="body2" color="secondary">
+              {"Sign Up"}
+            </Link>
           </Grid>
-        </Form>
-      </Box>
-    </Container>
+        </Grid>
+      </Form>
+    </LoginCardLayout>
   );
 }

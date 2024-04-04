@@ -1,11 +1,11 @@
-import { Box, Button, Container, TextField, Typography } from '@mui/material';
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { Form, useActionData } from '@remix-run/react';
+import { Form, useActionData } from "@remix-run/react";
 import { AuthenticatedLayout } from "~/components/AuthenticatedLayout";
 import { prisma } from "~/db.server";
-import { getUserById } from '~/models/user.server';
+import { getUserById } from "~/models/user.server";
 import { authenticator } from "~/utils/auth.server";
-import { getSession, destroySession } from '~/utils/sessions.server';
+import { getSession, destroySession } from "~/utils/sessions.server";
 
 export const action: ActionFunction = async ({ request, context }) => {
   // change the user's password if they submitted the form
@@ -32,7 +32,7 @@ export const action: ActionFunction = async ({ request, context }) => {
     await authenticator.authenticate("change-password", request, {
       successRedirect: "/dashboard",
       failureRedirect: "/settings",
-      context
+      context,
     });
 
     // log out the user
@@ -54,14 +54,22 @@ export const action: ActionFunction = async ({ request, context }) => {
     },
     body: "Method not allowed",
   };
-}
+};
 
 export default function SettingsRoute() {
   const actionData = useActionData<typeof loader>();
 
   return (
     <AuthenticatedLayout>
-      <Container sx={{ py: 4 }}>
+      <Container
+        sx={{
+          py: 4,
+          maxWidth: "sm",
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+        }}
+      >
         <Typography sx={{ textAlign: "center" }} variant="h1">
           Settings
         </Typography>
@@ -69,25 +77,76 @@ export default function SettingsRoute() {
           Change your personal information. Change your password. Change your
           email. Change your username. Change your life.
         </Typography>
-      </Container>
 
-      {actionData?.error ? <p>ERROR: {actionData?.error}</p> : null}
+        {actionData?.error ? <p>ERROR: {actionData?.error}</p> : null}
 
-      <Box component={Form} method="post" sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-        padding: 2,
-      }}>
-        <TextField fullWidth label="Email" type="email" id="email" autoComplete="email" name="email" />
-        <TextField fullWidth label="Old Password" type="password" required id="oldPassword" name="oldPassword" />
-        <TextField fullWidth label="New Password" type="password" id="newPassword" name="newPassword" />
-        <TextField fullWidth label="Confirm New Password" type="password" id="confirmNewPassword" name="confirmNewPassword" />
-
-        <Box sx={{ textAlign: "center", mt: 2 }}>
-          <Button type="submit" variant="contained" color="primary">Save Changes</Button>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            padding: 2,
+          }}
+        >
+          <Typography variant="h4" component="h2">
+            Log out
+          </Typography>
+          <Button variant="contained" color="secondary" href="/logout">
+            Log out
+          </Button>
         </Box>
-      </Box>
+
+        <Box
+          component={Form}
+          method="post"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            padding: 2,
+          }}
+        >
+          <Typography variant="h4" component="h2">
+            Change Password
+          </Typography>
+          <TextField
+            fullWidth
+            label="Email"
+            type="email"
+            id="email"
+            autoComplete="email"
+            name="email"
+          />
+          <TextField
+            fullWidth
+            label="Old Password"
+            type="password"
+            required
+            id="oldPassword"
+            name="oldPassword"
+          />
+          <TextField
+            fullWidth
+            label="New Password"
+            type="password"
+            id="newPassword"
+            name="newPassword"
+          />
+          <TextField
+            fullWidth
+            label="Confirm New Password"
+            type="password"
+            id="confirmNewPassword"
+            name="confirmNewPassword"
+          />
+
+          <Box sx={{ textAlign: "center", mt: 2 }}>
+            <Button type="submit" variant="contained" color="primary">
+              Save Changes
+            </Button>
+          </Box>
+        </Box>
+      </Container>
     </AuthenticatedLayout>
   );
 }

@@ -1,8 +1,8 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import { tmpdir } from 'os';
-import { EPub } from 'epub2';
-import { Book } from '@prisma/client';
+import * as fs from "fs";
+import * as path from "path";
+import { tmpdir } from "os";
+import { EPub } from "epub2";
+import { Book } from "@prisma/client";
 
 export async function parseEpub(epubFile: File) {
   const tmpFileName = `tempfile_${Date.now()}`;
@@ -26,6 +26,6 @@ export async function parseEpub(epubFile: File) {
     genre: "",
     file: buffer as Buffer,
     image: img[0],
-    chapterCount: epub.flow.length
+    chapterCount: epub.flow.length,
   };
 }

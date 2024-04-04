@@ -1,6 +1,11 @@
-import { Box, Container, Modal, Typography } from "@mui/material";
+import { Box, Button, Container, Modal, Typography } from "@mui/material";
 import { User } from "@prisma/client";
-import { ActionFunction, ActionFunctionArgs, LoaderFunction, redirect } from "@remix-run/node";
+import {
+  ActionFunction,
+  ActionFunctionArgs,
+  LoaderFunction,
+  redirect,
+} from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import { CoinIcon } from "~/components";
@@ -17,7 +22,7 @@ const CoinCount = ({ count }: { count: number }) => {
       alignItems={"center"}
       gap={1}
       bgcolor={"#0045bd"}
-      borderRadius={"30px"}
+      borderRadius={"999em"}
       px={1}
       py={0.5}
     >
@@ -29,7 +34,7 @@ const CoinCount = ({ count }: { count: number }) => {
       >
         {count}
       </Typography>
-      <CoinIcon style={{ width: "30px" }} />
+      <CoinIcon style={{ width: "2em" }} />
     </Box>
   );
 };
@@ -38,7 +43,7 @@ export default function HatcheryRoute() {
   let user: User = useLoaderData<typeof loader>();
   const [open, setOpen] = useState(false);
   const [hatchedCritter, setHatchedCritter] = useState({
-    "name": "",
+    name: "",
     image: "",
   });
   const handleClose = () => setOpen(false);
@@ -65,14 +70,47 @@ export default function HatcheryRoute() {
 
   return (
     <AuthenticatedLayout>
-      <Modal open={open} onClose={handleClose} sx={{ '& .MuiBackdrop-root': { backgroundColor: 'rgba(0,0,0,0.9)' } }}>
-        <Container sx={{position: 'absolute' as 'absolute', top: "50%", left: "50%", display: "flex", transform: "translate(-50%, -50%)", width: 600, height: 600, justifyContent: "space-between", flexDirection: "column", alignItems: "center"}}>
-          <Typography variant="h1" component="h1" fontFamily={"monospace"} fontWeight={"bold"} color="#E89B60">You hatched a</Typography>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        sx={{ "& .MuiBackdrop-root": { backgroundColor: "rgba(0,0,0,0.9)" } }}
+      >
+        <Container
+          sx={{
+            position: "absolute" as "absolute",
+            top: "50%",
+            left: "50%",
+            display: "flex",
+            transform: "translate(-50%, -50%)",
+            width: 600,
+            height: 600,
+            justifyContent: "space-between",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            variant="h1"
+            component="h1"
+            fontFamily={"monospace"}
+            fontWeight={"bold"}
+            color="#E89B60"
+          >
+            You hatched a
+          </Typography>
           <img
-              src={`/critters/${hatchedCritter.image}`}
-              alt="critter"
-            />
-          <Typography variant="h1" component="h1" fontFamily={"monospace"} fontWeight={"bold"} color="#98C9FF">{hatchedCritter.name}</Typography>
+            src={`/critters/${hatchedCritter.image}`}
+            alt={hatchedCritter.name}
+          />
+          <Typography
+            variant="h1"
+            component="h1"
+            fontFamily={"monospace"}
+            fontWeight={"bold"}
+            color="#98C9FF"
+          >
+            {hatchedCritter.name}
+          </Typography>
         </Container>
       </Modal>
 
@@ -110,34 +148,60 @@ export default function HatcheryRoute() {
         >
           <CoinCount count={user.coins} />
         </Container>
-        <Container sx={{display: "flex", marginTop: 10, height: "100%", justifyContent: "space-between", flexDirection: "column", alignItems: "center"}}>
-          <Typography variant="h1" component="h1" fontFamily={"monospace"} fontWeight={"bold"}>Hatchery</Typography>
-          <img
-              src={`/Egg.png`}
-              alt="critter"
-            />
-          <div onClick={hatchCritterAndNotify} style={{width: "100%", display: "flex", justifyContent: "center"}}>
-            <Box
-                bgcolor={"#D9F4FF"}
-                fontSize={"2em"}
-                gap={2}
-                alignItems={"center"}
-                display={"flex"}
-                flexDirection={"row"}
-                justifyContent={"center"}
-                width={"80%"}
-                height={"80px"}
-                borderRadius={"50px"}
-                border={"2px solid #E89B60"}
-                color={"#0045bd"}
-                mb={20}
-                sx={{ "&:hover": { backgroundColor: "#001e6b", color: "white" } }}
-              >
-                <Typography variant="h4" component="h1" fontFamily={"monospace"} textTransform={"uppercase"}>
-                  Hatch for 500
-                </Typography>
-                <CoinIcon style={{ width: "40px", marginTop: "-5px" }} />
-            </Box>
+        <Container
+          sx={{
+            display: "flex",
+            marginTop: 10,
+            height: "100%",
+            justifyContent: "space-between",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            variant="h1"
+            component="h1"
+            fontFamily={"monospace"}
+            fontWeight={"bold"}
+          >
+            Hatchery
+          </Typography>
+          <img src={`/Egg.png`} alt="An unhatched egg" />
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              height: "100%",
+              alignItems: "center",
+            }}
+          >
+            <Button
+              onClick={hatchCritterAndNotify}
+              sx={{
+                alignItems: "center",
+                display: "flex",
+                justifyContent: "center",
+                width: "100%",
+                height: "3em",
+                borderRadius: "999em",
+                fontSize: "2rem",
+              }}
+              variant="contained"
+              color="secondary"
+              endIcon={
+                <CoinIcon
+                  style={{
+                    width: "40px",
+                    marginTop: "-5px",
+                    marginRight: "10px",
+                  }}
+                  fill={"white"}
+                />
+              }
+            >
+              Hatch for 500
+            </Button>
           </div>
         </Container>
       </Container>
@@ -158,7 +222,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const userData = await prisma.user.findUnique({
     where: {
       id: user.id,
-    }
+    },
   });
   if (!userData || userData instanceof Error) {
     redirect("/");
