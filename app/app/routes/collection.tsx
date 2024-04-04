@@ -88,7 +88,7 @@ export default function CollectionRoute() {
       return;
     }
 
-    const response = await fetch("http://localhost:3000/api/levelup", {
+    const response = await fetch(window.location.origin + "/api/levelup", {
       method: "POST",
       headers: {
       "Content-Type": "application/json",

@@ -49,7 +49,7 @@ export default function HatcheryRoute() {
       return;
     }
 
-    const response = await fetch("http://localhost:3000/api/hatch");
+    const response = await fetch(window.location.origin + "/api/hatch");
     const responseJson = await response.json();
     const error = responseJson?.error;
     const critter = responseJson?.critter;
