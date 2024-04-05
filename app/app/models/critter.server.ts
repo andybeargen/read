@@ -54,6 +54,29 @@ export async function getUserCritters(userId: User["id"]) {
   });
 }
 
+export async function userHasCritter(userId: User["id"], userCritterId: UserCritter["id"]) {
+  const critter = await prisma.userCritter.findUnique({
+    where: {
+      id: userCritterId
+    }
+  });
+
+  return userId == critter?.userId;
+}
+
+export async function levelUpCritter(userCritterId: UserCritter["id"]) {
+  await prisma.userCritter.update({
+    where: {
+      id: userCritterId
+    },
+    data: {
+      level: {
+        increment: 1
+      }
+    }
+  });
+}
+
 /**
  * Creates a new UserCritter and assigns it to the user with id of userId.
  * @constructor

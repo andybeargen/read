@@ -54,7 +54,7 @@ export default function HatcheryRoute() {
       return;
     }
 
-    const response = await fetch("http://localhost:3000/api/hatch");
+    const response = await fetch(window.location.origin + "/api/hatch");
     const responseJson = await response.json();
     const error = responseJson?.error;
     const critter = responseJson?.critter;
@@ -216,17 +216,23 @@ export const loader: LoaderFunction = async ({ request }) => {
   });
 
   if (user instanceof Error || !user) {
-    redirect("/");
-    return null;
+    return redirect("/");
   }
   const userData = await prisma.user.findUnique({
     where: {
       id: user.id,
     },
+    include: {
+      UserCritter: true,
+    },
   });
   if (!userData || userData instanceof Error) {
-    redirect("/");
-    return null;
+    return redirect("/");
+  }
+  console.log(userData);
+  // check if user has no critters, if they don't redirect to /select-critter
+  if (userData.UserCritter.length === 0) {
+    return redirect("/select-critter");
   }
 
   return userData;

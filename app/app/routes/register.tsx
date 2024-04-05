@@ -29,7 +29,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export async function action({ request, context }: ActionFunctionArgs) {
   try {
     return await authenticator.authenticate("register", request, {
-      successRedirect: "/",
+      successRedirect: "/select-critter",
       throwOnError: true,
       context,
     });

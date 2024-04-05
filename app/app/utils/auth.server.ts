@@ -26,7 +26,7 @@ export const authenticator = new Authenticator<User | Error | null>(
   {
     sessionKey: "userId",
     sessionErrorKey: "error",
-  },
+  }
 );
 
 // Tell the Authenticator to use the form strategy
@@ -64,7 +64,7 @@ authenticator.use(
   }),
   // each strategy has a name and can be changed to use another one
   // same strategy multiple times, especially useful for the OAuth2 strategy.
-  "email-pass",
+  "email-pass"
 );
 
 authenticator.use(
@@ -92,7 +92,7 @@ authenticator.use(
     return await createUser(
       username.toString(),
       email.toString(),
-      password.toString(),
+      password.toString()
     ).then((user) => {
       if (user instanceof Error) {
         throw new AuthorizationError("User already exists");
@@ -106,11 +106,6 @@ authenticator.use(
         throw new AuthorizationError("Error creating user");
       }
 
-      if (user) {
-        const critter = hatchCritter(user.id);
-        console.log(critter);
-      }
-
       // the type of this user must match the type you pass to the Authenticator
       // the strategy will automatically inherit the type if you instantiate
       // directly inside the `use` method
@@ -119,7 +114,7 @@ authenticator.use(
   }),
   // each strategy has a name and can be changed to use another one
   // same strategy multiple times, especially useful for the OAuth2 strategy.
-  "register",
+  "register"
 );
 
 authenticator.use(
@@ -167,5 +162,5 @@ authenticator.use(
     // directly inside the `use` method
     return user;
   }),
-  "change-password",
+  "change-password"
 );

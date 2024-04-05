@@ -10,8 +10,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
 
   if (user instanceof Error || !user) {
-    redirect("/");
-    return json({ error: "No user" });
+    return redirect("/");
   }
   const userData = await prisma.user.findUnique({
     where: {
@@ -19,8 +18,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   });
   if (!userData || userData instanceof Error) {
-    redirect("/");
-    return json({ error: "No user" });
+    return redirect("/");
   }
 
   if (userData.coins < 500) {
