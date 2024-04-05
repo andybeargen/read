@@ -13,6 +13,7 @@ import { getBookById } from "~/models/book.server";
 
 import * as fs from "fs";
 import type { Contents, Rendition, NavItem } from "epubjs";
+import { addCoins } from "~/models/user.server";
 
 export default function Book() {
   const book: Book = useLoaderData<typeof loader>();
@@ -118,6 +119,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       where: { id: critterId },
     });
 
+    addCoins(user.id, 100);
   const bookData = params.bookId ? await getBookById(params.bookId) : null;
   return bookData;
 };
