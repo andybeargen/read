@@ -28,8 +28,8 @@
   },
   {
     "data": {
-      "name": "Leaf Turtle",
-      "description": "Leaf Turtle are known for their ability to camouflage themselves in the forest. They are often mistaken for rocks or leaves.",
+      "name": "Bushlin",
+      "description": "Bushlin are known for their ability to camouflage themselves in the forest. They are often mistaken for rocks or leaves.",
       "type": "Grass",
       "image": "LeafTurtle.png"
     },
@@ -37,8 +37,8 @@
   },
   {
     "data": {
-      "name": "Red Bird",
-      "description": "Red Bird are known for their beautiful red feathers. They are often seen flying in the sky during the day.",
+      "name": "Rojobin",
+      "description": "Rojobin are known for their beautiful red feathers. They are often seen flying in the sky during the day.",
       "type": "Flying",
       "image": "RedBird.png"
     },
@@ -46,8 +46,8 @@
   },
   {
     "data": {
-      "name": "Thing",
-      "description": "Thing is a mysterious creature that is said to be able to take on the form of anything it sees. It is said that Thing can be found in the darkest corners of the world.",
+      "name": "Mimposter",
+      "description": "Mimposter is a mysterious creature that is said to be able to take on the form of anything it sees. It is said that Mimposters can be found in the darkest corners of the world.",
       "type": "Normal",
       "image": "Thing.png"
     },
