@@ -91,30 +91,32 @@ export default function Book() {
 
 // detect if user is logged in
 export const loader: LoaderFunction = async ({ request, params }) => {
-  // if the user is authenticated, redirect to /dashboard
-  const user = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/",
-  });
-  if (user instanceof Error || !user) {
-    redirect("/");
-    return null;
-  }
-  const userData = await prisma.user.findUnique({
-    where: {
-      id: user.id,
-    },
-    include: {
-      UserCritter: true,
-    },
-  });
-  if (!userData || userData instanceof Error) {
-    redirect("/");
-    return null;
-  }
-  const critterId = userData.UserCritter[0].critterId;
-  userData.UserCritter = await prisma.critter.findUnique({
-    where: { id: critterId },
-  });
+    // if the user is authenticated, redirect to /dashboard
+    const user = await authenticator.isAuthenticated(request, {
+      failureRedirect: "/",
+    });
+    if (user instanceof Error || !user) {
+      return redirect("/");
+    }
+    const userData = await prisma.user.findUnique({
+      where: {
+        id: user.id,
+      },
+      include: {
+        UserCritter: true,
+      },
+    });
+    if (!userData || userData instanceof Error) {
+      return redirect("/");
+    }
+    // check if user has no critters, if they don't redirect to /select-critter
+    if (userData.UserCritter.length === 0) {
+      return redirect("/select-critter");
+    }
+    const critterId = userData.UserCritter[0].critterId;
+    userData.UserCritter = await prisma.critter.findUnique({
+      where: { id: critterId },
+    });
 
   const bookData = params.bookId ? await getBookById(params.bookId) : null;
   return bookData;

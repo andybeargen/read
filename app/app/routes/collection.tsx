@@ -318,8 +318,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     failureRedirect: "/",
   });
   if (user instanceof Error || !user) {
-    redirect("/");
-    return null;
+    return redirect("/");
   }
   const userData = await prisma.user.findUnique({
     where: {
@@ -333,5 +332,8 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   // get all the user's critters
   const critters = await getUserCritters(user.id);
+  if (critters.length === 0) {
+    return redirect("/select-critter");
+  }
   return { critters, user: userData };
 };
