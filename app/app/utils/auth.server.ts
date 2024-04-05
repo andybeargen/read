@@ -7,7 +7,7 @@ import {
 import { User } from "@prisma/client";
 import { FormStrategy } from "remix-auth-form";
 
-import { createUser, loginUser, updatePassword } from "~/models/user.server";
+import { addCoins, createUser, loginUser, updatePassword } from "~/models/user.server";
 import {
   createCritter,
   assignCritterToUser,
@@ -109,6 +109,8 @@ authenticator.use(
       // the type of this user must match the type you pass to the Authenticator
       // the strategy will automatically inherit the type if you instantiate
       // directly inside the `use` method
+      addCoins(user.id, 1000);
+
       return user;
     });
   }),
